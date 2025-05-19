@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PackageController;
+use App\Http\Controllers\TransactionDetailController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ConfirmationController;
 use App\Http\Controllers\TransactionController;
@@ -11,6 +14,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::get('/categories', [CategoryController::class, 'index']); 
+Route::get('/packages', [PackageController::class, 'index']); 
+Route::get('/transaction_details', [TransactionDetailController::class, 'index']); 
 Route::get('/users', [UserController::class, 'index']); 
 Route::get('/admins', [AdminController::class, 'index']); 
 Route::get('/confirmations', [ConfirmationController::class, 'index']); 
