@@ -11,5 +11,10 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/categories', [CategoryController::class, 'index']); 
+Route::post('/categories', [CategoryController::class, 'store']); 
+
 Route::get('/packages', [PackageController::class, 'index']); 
+Route::post('/packages', [PackageController::class, 'store']); 
+
 Route::get('/transaction_details', [TransactionDetailController::class, 'index']); 
+Route::post('/transaction_details', [TransactionDetailController::class, 'store']); 
