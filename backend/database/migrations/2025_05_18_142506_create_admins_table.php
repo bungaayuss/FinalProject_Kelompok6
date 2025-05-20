@@ -11,25 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('admins', function (Blueprint $table) {
             $table->id();
+            $table->string('nama');
             $table->string('username');
             $table->string('password');
-            $table->string('no_telepon');
-            $table->string('email');
-            $table->string('kota');
-            $table->string('nama_acara');
-            $table->date('tanggal_acara');
-            $table->string('konfirmasi');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('admmins');
     }
 };
