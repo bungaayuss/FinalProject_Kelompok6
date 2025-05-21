@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('gambar');
             $table->date('tanggal_bayar');
             $table->integer('subtotal');
-            // $table->foreignId('transactions_id')->constrained('transactions');
+            $table->foreignId('transactions_id')->constrained('transactions');
             $table->timestamps();
         });
     }
