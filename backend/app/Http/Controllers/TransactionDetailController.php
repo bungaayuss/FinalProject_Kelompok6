@@ -51,4 +51,77 @@ class TransactionDetailController extends Controller
             "data" => $transaction_detail
         ]);
     }
+
+    public function show(string $id){
+        $transaction_detail = TransactionDetail::find($id);
+        
+        if (!$transaction_detail){
+            return response()->json([
+                "success" => false,
+                "message" => "Resource not found"
+            ], 404);
+        }
+
+        return response()->json([
+            "success" => true,
+            "message" => "Get detail resource",
+            "data" => $transaction_detail
+        ], 200);
+    }
+
+     public function update(string $id, Request $request){
+        // 1. Mencari data
+        $transaction_detail = TransactionDetail::find($id);
+
+        if (!$transaction_detail){
+            return response()->json([
+                "success" => false,
+                "message" => "Resource not found"
+            ], 404);
+        }
+
+        // 2. Validator
+        $validator = Validator::make($request->all(), [
+            'harga' => 'required|numeric',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                "success" => false,
+                "message" => $validator->errors()
+            ], 422);
+        }
+
+        // 3. Siapkan data yang ingin diupdate
+        $data = [
+            'harga' => $request->harga
+        ];  
+
+        // 4. Update data baru ke database
+        $transaction_detail->update($data);
+
+        return response()->json([
+            "success" => true,
+            "message" => "Resource updated successfully",
+            "data" => $transaction_detail
+        ], 200);
+    }
+
+    public function destroy(string $id){
+       $transaction_detail = TransactionDetail::find($id);
+
+       if (!$transaction_detail){
+            return response()->json([
+                "success" => false,
+                "message" => "Resource not found"
+            ], 404);
+       }
+
+       $transaction_detail->delete();
+       return response()->json([
+            "success" => true,
+            "message" => "Delete resource successfully"
+        ], 200);
+    }
+    
 }

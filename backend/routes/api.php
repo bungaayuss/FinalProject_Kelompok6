@@ -10,11 +10,8 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/categories', [CategoryController::class, 'index']); 
-Route::post('/categories', [CategoryController::class, 'store']); 
+Route::apiResource('categories', CategoryController::class);
 
-Route::get('/packages', [PackageController::class, 'index']); 
-Route::post('/packages', [PackageController::class, 'store']); 
+Route::apiResource('packages', PackageController::class);
 
-Route::get('/transaction_details', [TransactionDetailController::class, 'index']); 
-Route::post('/transaction_details', [TransactionDetailController::class, 'store']); 
+Route::apiResource('transaction_details', TransactionDetailController::class);
