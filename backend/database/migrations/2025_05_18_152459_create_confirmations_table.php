@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('amount', 12, 2);
             $table->date('payment_date');
             $table->enum('status', ['Waiting verification', 'Paid', 'Rejected']);
-            $table->foreignId('admins_id')->constrained()->onDelete('cascade');
+            $table->foreignId('admins_id')->nullable()->constrained()->onDelete('cascade')->change();
             $table->timestamps();
         });
     }
