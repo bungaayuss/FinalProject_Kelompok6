@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('kota');
             $table->string('nama_acara');
             $table->date('tanggal_acara');
-            $table->string('konfirmasi');
             $table->timestamps();
         });
     }

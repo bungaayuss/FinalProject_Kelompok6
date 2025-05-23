@@ -67,21 +67,21 @@ class ConfirmationController extends Controller
         ], 200);
     }
 
-    // public function destroy($id){
-    //     $confirmation = Confirmation::find($id);
+    public function destroy($id){
+        $confirmation = Confirmation::find($id);
 
-    //     if (!$confirmation) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Data konfirmasi tidak ditemukan'
-    //         ], 404);
-    //     }
+        if (!$confirmation) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data konfirmasi tidak ditemukan'
+            ], 404);
+        }
 
-    //     $confirmation->delete();
+        $confirmation->delete();
 
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Data konfirmasi berhasil dihapus'
-    //     ], 200);
-    // }
+        return response()->json([
+            'success' => true,
+            'message' => 'Data konfirmasi berhasil dihapus'
+        ], 200);
+    }
 }

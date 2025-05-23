@@ -19,8 +19,7 @@ class UserSeeder extends Seeder
                 'email' => 'jungkook97@gmail.com',
                 'kota' => 'Seoul',
                 'nama_acara' => 'Pernikahan Jungkook & Lisa',
-                'tanggal_acara' => '2025-08-20',
-                'konfirmasi' => 'Sudah',
+                'tanggal_acara' => '2025-08-20'
             ],
             [
                 'username' => 'iu_leejieun',
@@ -29,8 +28,7 @@ class UserSeeder extends Seeder
                 'email' => 'iu.leejieun@gmail.com',
                 'kota' => 'Busan',
                 'nama_acara' => 'Sweet 23rd Birthday IU',
-                'tanggal_acara' => '2025-07-10',
-                'konfirmasi' => 'Belum',
+                'tanggal_acara' => '2025-07-10'
             ],
             [
                 'username' => 'taeyong_nct',
@@ -39,8 +37,7 @@ class UserSeeder extends Seeder
                 'email' => 'taeyongnct@gmail.com',
                 'kota' => 'Incheon',
                 'nama_acara' => 'Webinar Produksi Musik Digital Bareng Taeyong',
-                'tanggal_acara' => '2025-09-15',
-                'konfirmasi' => 'Sudah',
+                'tanggal_acara' => '2025-09-15'
             ],
             [
                 'username' => 'rose_blackpink',
@@ -49,8 +46,7 @@ class UserSeeder extends Seeder
                 'email' => 'rosebp@gmail.com',
                 'kota' => 'Daegu',
                 'nama_acara' => 'Graduation Garden Party Rose & Friends',
-                'tanggal_acara' => '2025-06-25',
-                'konfirmasi' => 'Belum',
+                'tanggal_acara' => '2025-06-25'
             ],
             [
                 'username' => 'cha_eunwoo',
@@ -59,8 +55,7 @@ class UserSeeder extends Seeder
                 'email' => 'chaeunwoo@gmail.com',
                 'kota' => 'Jeju',
                 'nama_acara' => 'Engagement Eunwoo & Seolhyun with Boho Theme',
-                'tanggal_acara' => '2025-11-05',
-                'konfirmasi' => 'Sudah',
+                'tanggal_acara' => '2025-11-05'
             ],
         ];
 

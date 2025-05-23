@@ -62,6 +62,42 @@ class AdminController extends Controller
         ], 200);
     }
 
+    public function update(Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'nama' => 'required|string|max:100',
+            'username' => 'required|string',
+            'password' => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()
+            ], 422);
+        }
+
+        $admin = Admins::find($id);
+
+        if (!$admin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data  tidak ditemukan'
+            ], 404);
+        }
+
+        $admin->update([
+            'nama' =>  $request-> nama,
+            'username' => $request-> username,
+            'password' =>  $request-> password
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil diperbarui',
+            'data' => $admin
+        ], 201);
+    }
+
     public function destroy($id){
         $admin = Admins::find($id);
 

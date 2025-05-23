@@ -21,31 +21,16 @@ Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/packages', [PackageController::class, 'index']);
 
 //user
-Route::get('/users', [UserController::class, 'index']);
-Route::post('/users', [UserController::class, 'store']);
-Route::get('/users/{id}', [UserController::class, 'show']);
-// Route::get('/users/{id}/edit', [UserController::class, 'edit']);
-// Route::put('/users/{id}', [UserController::class, 'update']);
-Route::delete('/users/{id}', [UserController::class, 'destroy']);
+Route::apiResource('users', UserController::class);
 
 //admin
-Route::get('/admins', [AdminController::class, 'index']);
-Route::post('/admins', [AdminController::class, 'store']);
-Route::get('/admins/{id}', [AdminController::class, 'show']);
-// Route::get('/admins/{id}/edit', [AdminController::class, 'edit']);
-// Route::put('/admins/{id}', [AdminController::class, 'update']);
-Route::delete('/admins/{id}', [AdminController::class, 'destroy']);
+Route::apiResource('admins', AdminController::class);
 
 //confirmations
-Route::get('/confirmations', [ConfirmationController::class, 'index']);
-Route::post('/confirmations', [ConfirmationController::class, 'store']);
-Route::get('/confirmations/{id}', [ConfirmationController::class, 'show']);
-// Route::delete('/confirmations/{id}', [ConfirmationController::class, 'destroy']); 
+Route::apiResource('confirmations', ConfirmationController::class);
 
 //transactions
-Route::get('/transactions', [TransactionController::class, 'index']);
-Route::post('/transactions', [TransactionController::class, 'store']);
-Route::get('/transactions/{id}', [TransactionController::class, 'show']);
+Route::apiResource('transactions', TransactionController::class);
 
 //transaction_details
 Route::get('/transaction_details', [TransactionDetailController::class, 'index']); 
