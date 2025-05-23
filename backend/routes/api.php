@@ -31,6 +31,3 @@ Route::apiResource('confirmations', ConfirmationController::class);
 
 //transactions
 Route::apiResource('transactions', TransactionController::class);
-
-//transaction_details
-Route::get('/transaction_details', [TransactionDetailController::class, 'index']); 

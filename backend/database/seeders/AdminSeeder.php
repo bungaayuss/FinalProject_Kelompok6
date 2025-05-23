@@ -12,27 +12,27 @@ class AdminSeeder extends Seeder
     {
         $admins = [
             [
-                'nama' => 'Bunga Ayu',
+                'name' => 'Bunga Ayu',
                 'username' => 'bungaayu',
                 'password' => Hash::make('bunga123'),
             ],
             [
-                'nama' => 'Eka Ayu',
+                'name' => 'Eka Ayu',
                 'username' => 'ekaayu',
                 'password' => Hash::make('eka123'),
             ],
             [
-                'nama' => 'Natasya Chesa',
+                'name' => 'Natasya Chesa',
                 'username' => 'natasya',
                 'password' => Hash::make('natasya123'),
             ],
             [
-                'nama' => 'Rina Aprilia',
+                'name' => 'Rina Aprilia',
                 'username' => 'rinaaprilia',
                 'password' => Hash::make('rina123'),
             ],
             [
-                'nama' => 'Nasywa Anisatun',
+                'name' => 'Nasywa Anisatun',
                 'username' => 'nasywa',
                 'password' => Hash::make('nasywa123'),
             ],

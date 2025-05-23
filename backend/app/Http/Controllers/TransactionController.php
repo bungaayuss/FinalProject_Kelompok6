@@ -20,11 +20,13 @@ class TransactionController extends Controller
 
     public function store(Request $request){
         $validator = Validator::make($request->all(),[
-            'tanggal_pesan' => 'required|date_format:Y-m-d',
-            'foto' => 'required|image|mimes:jpeg,jpg,png|max:2048',
-            'subtotal' => 'required|integer',
             'user_id' => 'required|integer',
-            'admin_id' => 'required|integer'
+            'admin_id' => 'required|integer',
+            'event_name' => 'required|string',
+            'event_date' => 'required|string',
+            'event_detail' => 'required|string',
+            'transaction_date' => 'required|date_format:Y-m-d',
+            'total' => 'required|numeric'
         ]);
 
         if ($validator->fails()){
@@ -34,15 +36,15 @@ class TransactionController extends Controller
             ], 422);
         }
 
-        $image = $request->file('photo');
-        $image->store('authors', 'public');
-
         $transaction = Transaction::create([
-            'tanggal_pesan' => $request-> tanggal_pesan,
-            'foto' =>  $request-> hashName(),
-            'subtotal' =>  $request-> subtotal,
-            'user_id' =>  $request-> user_id,
-            'admin_id' =>  $request-> admin_id
+            'user_id' => $request->user_id,
+            'admin_id' => $request->admin_id,
+            'event_name' => $request->event_name,
+            'event_date' => $request->event_date,
+            'event_detail' => $request->event_detail,
+            'transaction_date' => $request->transaction_date,
+            'total' => $request->total,
+            'status' => 'Waiting verification'
         ]);
 
         return response()->json([
