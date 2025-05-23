@@ -20,7 +20,7 @@ class ConfirmationSeeder extends Seeder
             'amount' => 1500000.00,
             'payment_date' => Carbon::now()->subDays(1)->format('Y-m-d'),
             'status' => 'Waiting verification',
-            'admins_id' => 1
+            'admins_id' => null
         ]);
     }
 }

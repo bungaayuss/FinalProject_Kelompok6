@@ -73,6 +73,7 @@ class ConfirmationController extends Controller
 
     public function update(Request $request, $id){
         $validator = Validator::make($request->all(), [
+            'admins_id' => 'required|exists:admins,id',
             'status' => 'required|in:Waiting verification,Paid,Rejected'
         ]);
         
@@ -92,6 +93,7 @@ class ConfirmationController extends Controller
             ], 404);
         }
 
+        $confirmation->admins_id = $request->admins_id;
         $confirmation->status = $request->status;
         $confirmation->save();
 
