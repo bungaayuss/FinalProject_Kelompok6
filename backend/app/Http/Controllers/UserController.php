@@ -26,8 +26,7 @@ class UserController extends Controller
             'email' => 'required|string',
             'kota' => 'required|string',
             'nama_acara' => 'required|string',
-            'tanggal_acara' => 'required|date_format:Y-m-d',
-            'konfirmasi' => 'required|string'
+            'tanggal_acara' => 'required|date_format:Y-m-d'
         ]);
 
         if ($validator->fails()){
@@ -44,8 +43,7 @@ class UserController extends Controller
             'email' =>  $request-> email,
             'kota' =>  $request-> kota,
             'nama_acara' =>  $request-> nama_acara,
-            'tanggal_acara' =>  $request-> tanggal_acara,
-            'konfirmasi' =>  $request-> konfirmasi
+            'tanggal_acara' =>  $request-> tanggal_acara
         ]);
 
         return response()->json([
@@ -72,51 +70,49 @@ class UserController extends Controller
         ], 200);
     }
 
-    // public function update(Request $request, $id){
-    //     $validator = Validator::make($request->all(), [
-    //         'username' => 'required',
-    //         'password' => 'required',
-    //         'no_telepon' => 'required',
-    //         'email' => 'required',
-    //         'kota' => 'required',
-    //         'nama_acara' => 'required',
-    //         'tanggal_acara' => 'required',
-    //         'konfirmasi' => 'required'
-    //     ]);
+    public function update(Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'username' => 'required|string',
+            'password' => 'required|string',
+            'no_telepon' => 'required|string',
+            'email' => 'required|string',
+            'kota' => 'required|string',
+            'nama_acara' => 'required|string',
+            'tanggal_acara' => 'required|date_format:Y-m-d'
+        ]);
 
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => $validator->errors()
-    //         ], 422);
-    //     }
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()
+            ], 422);
+        }
 
-    //     $user = User::find($id);
+        $user = User::find($id);
 
-    //     if (!$user) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'User tidak ditemukan'
-    //         ], 404);
-    //     }
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User tidak ditemukan'
+            ], 404);
+        }
 
-    //     $user->update([
-    //         'username' => $request->username,
-    //         'password' => $request->password,
-    //         'no_telepon' => $request->no_telepon,
-    //         'email' => $request->email,
-    //         'kota' => $request->kota,
-    //         'nama_acara' => $request->nama_acara,
-    //         'tanggal_acara' => $request->tanggal_acara,
-    //         'konfirmasi' => $request->konfirmasi
-    //     ]);
+        $user->update([
+            'username' => $request->username,
+            'password' => $request->password,
+            'no_telepon' => $request->no_telepon,
+            'email' => $request->email,
+            'kota' => $request->kota,
+            'nama_acara' => $request->nama_acara,
+            'tanggal_acara' => $request->tanggal_acara
+        ]);
 
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Data berhasil diperbarui',
-    //         'data' => $user
-    //     ], 201);
-    // } > blom bisa
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil diperbarui',
+            'data' => $user
+        ], 201);
+    }
 
     public function destroy($id){
         $user = User::find($id);
