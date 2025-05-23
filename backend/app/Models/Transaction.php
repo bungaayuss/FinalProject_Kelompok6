@@ -9,6 +9,6 @@ class Transaction extends Model
     protected $table = 'transactions';
 
     protected $fillable = [
-        'tanggal_pesan', 'foto', 'subtotal', 'user_id', 'admin_id'
+        'user_id', 'packages_id', 'event_name', 'event_date', 'event_detail', 'transaction_date', 'total', 'status'
     ];
 }

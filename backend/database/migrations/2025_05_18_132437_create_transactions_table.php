@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->date('tanggal_pesan');
-            $table->string('foto');
-            $table->integer('subtotal');
-            $table->foreignId('user_id');
-            $table->foreignId('admin_id');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('packages_id')->constrained()->onDelete('cascade');
+            $table->string('event_name');
+            $table->date('event_date');
+            $table->text('event_detail');
+            $table->date('transaction_date');
+            $table->decimal('total', 12, 2);
+            $table->enum('status', ['Waiting verification', 'Paid', 'Rejected']);
             $table->timestamps();
         });
     }

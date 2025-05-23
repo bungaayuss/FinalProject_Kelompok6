@@ -20,10 +20,12 @@ class ConfirmationController extends Controller
 
     public function store(Request $request){
         $validator = Validator::make($request->all(),[
-            'gambar' => 'required|image|mimes:jpeg,jpg,png|max:2048',
-            'tanggal_bayar' => 'required|date_format:Y-m-d',
-            'subtotal' => 'required|integer',
-            'transaction_id' => 'required|integer'
+            'transactions_id' => 'required|integer',
+            'image' => 'required|image|mimes:jpeg,jpg,png|max:2048',
+            'amount' => 'required|numeric',
+            'payment_date' => 'required|date_format:Y-m-d',
+            'status' => 'required|in:Waiting verification,Paid,Rejected',
+            'admins_id' => 'required|integer'
         ]);
 
         if ($validator->fails()){
@@ -34,13 +36,15 @@ class ConfirmationController extends Controller
         }
 
         $image = $request->file('photo');
-        $image->store('authors', 'public');
+        $image->store('confirmations', 'public');
 
         $confirmation = Confirmation::create([
-            'gambar' => $request-> hashName(),
-            'tanggal_bayar' =>  $request-> tanggal_bayar,
-            'subtotal' =>  $request-> subtotal,
-            'transaction_id' =>  $request-> transaction_id,
+            'transactions_id' =>  $request-> transactions_id,
+            'image' => $request-> hashName(),
+            'payment_date' =>  $request-> payment_date,
+            'amount' =>  $request-> amount,
+            'status' => $request-> status,
+            'admins_id' =>  $request-> admins_id,
         ]);
 
         return response()->json([
@@ -66,6 +70,40 @@ class ConfirmationController extends Controller
             'data' => $confirmation
         ], 200);
     }
+
+    public function update(Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|in:Waiting verification,Paid,Rejected'
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()
+            ], 422);
+        }
+
+        $confirmation = Confirmation::find($id);
+
+        if (!$confirmation) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
+
+        $confirmation->status = $request->status;
+        $confirmation->save();
+
+        $confirmation->transaction->update(['status' => $request->status]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status berhasil diperbarui',
+            'data' => $confirmation
+        ]);
+    }
+
 
     public function destroy($id){
         $confirmation = Confirmation::find($id);

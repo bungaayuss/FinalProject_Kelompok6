@@ -20,7 +20,7 @@ class AdminController extends Controller
 
     public function store(Request $request){
         $validator = Validator::make($request->all(),[
-            'nama' => 'required|string|max:100',
+            'name' => 'required|string|max:100',
             'username' => 'required|string',
             'password' => 'required|string'
         ]);
@@ -33,7 +33,7 @@ class AdminController extends Controller
         }
 
         $admin = Admins::create([
-            'nama' =>  $request-> nama,
+            'name' =>  $request-> name,
             'username' => $request-> username,
             'password' =>  $request-> password
         ]);
@@ -64,7 +64,7 @@ class AdminController extends Controller
 
     public function update(Request $request, $id){
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:100',
+            'name' => 'required|string|max:100',
             'username' => 'required|string',
             'password' => 'required|string'
         ]);
@@ -86,7 +86,7 @@ class AdminController extends Controller
         }
 
         $admin->update([
-            'nama' =>  $request-> nama,
+            'name' =>  $request-> name,
             'username' => $request-> username,
             'password' =>  $request-> password
         ]);
