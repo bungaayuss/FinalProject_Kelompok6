@@ -14,11 +14,15 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+
 //categories
-Route::get('/categories', [CategoryController::class, 'index']);
+Route::apiResource('categories', CategoryController::class);
 
 //packages
-Route::get('/packages', [PackageController::class, 'index']);
+Route::apiResource('packages', PackageController::class);
+
+// transactions_details
+Route::apiResource('transaction_details', TransactionDetailController::class);
 
 //user
 Route::apiResource('users', UserController::class);

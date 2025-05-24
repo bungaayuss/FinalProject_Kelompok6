@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
+use App\Models\TransactionDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class CategoryController extends Controller
+class TransactionDetailController extends Controller
 {
     public function index(){
-        $categories = Category::all();
+        $transaction_details = TransactionDetail::all();
         
-        if ($categories->isEmpty()){
+        if ($transaction_details->isEmpty()){
             return response()->json([
                 "success" => true,
                 "message" => "Resource data not found!"
@@ -21,14 +21,14 @@ class CategoryController extends Controller
         return response()->json([
             "success" => true,
             "message" => "Get All Resource",
-            "data" => $categories
+            "data" => $transaction_details
         ], 200);
     }
 
     public function store(Request $request){
         // 1. Validator
         $validator = Validator::make($request->all(), [
-            'nama_kategori' => 'required|string'
+            'harga' => 'required|numeric',
         ]);
 
         // 2. Check Validator eror
@@ -40,22 +40,22 @@ class CategoryController extends Controller
         }
 
         // 3. Insert data
-        $category = Category::create([
-            'nama_kategori' => $request->nama_kategori
+        $transaction_detail = TransactionDetail::create([
+            'harga' => $request->harga
         ]);
         
         // 4. Response
         return response()->json([
             "success" => true,
             "message" => "Resource added successfully",
-            "data" => $category
+            "data" => $transaction_detail
         ]);
     }
 
     public function show(string $id){
-        $category = Category::find($id);
+        $transaction_detail = TransactionDetail::find($id);
         
-        if (!$category){
+        if (!$transaction_detail){
             return response()->json([
                 "success" => false,
                 "message" => "Resource not found"
@@ -65,15 +65,15 @@ class CategoryController extends Controller
         return response()->json([
             "success" => true,
             "message" => "Get detail resource",
-            "data" => $category
+            "data" => $transaction_detail
         ], 200);
     }
 
      public function update(string $id, Request $request){
         // 1. Mencari data
-        $category = Category::find($id);
+        $transaction_detail = TransactionDetail::find($id);
 
-        if (!$category){
+        if (!$transaction_detail){
             return response()->json([
                 "success" => false,
                 "message" => "Resource not found"
@@ -82,9 +82,9 @@ class CategoryController extends Controller
 
         // 2. Validator
         $validator = Validator::make($request->all(), [
-            'nama_kategori' => 'required|string'
+            'harga' => 'required|numeric',
         ]);
-
+        
         if ($validator->fails()) {
             return response()->json([
                 "success" => false,
@@ -94,33 +94,34 @@ class CategoryController extends Controller
 
         // 3. Siapkan data yang ingin diupdate
         $data = [
-            'nama_kategori' => $request->nama_kategori
+            'harga' => $request->harga
         ];  
 
         // 4. Update data baru ke database
-        $category->update($data);
+        $transaction_detail->update($data);
 
         return response()->json([
             "success" => true,
             "message" => "Resource updated successfully",
-            "data" => $category
+            "data" => $transaction_detail
         ], 200);
     }
 
     public function destroy(string $id){
-       $category = Category::find($id);
+       $transaction_detail = TransactionDetail::find($id);
 
-       if (!$category){
+       if (!$transaction_detail){
             return response()->json([
                 "success" => false,
                 "message" => "Resource not found"
             ], 404);
        }
 
-       $category->delete();
+       $transaction_detail->delete();
        return response()->json([
             "success" => true,
             "message" => "Delete resource successfully"
         ], 200);
     }
+    
 }
