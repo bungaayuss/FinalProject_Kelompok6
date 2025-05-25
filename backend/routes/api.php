@@ -2,13 +2,13 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PackageController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConfirmationController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Pest\Plugins\Only;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -23,32 +23,44 @@ Route::post('/login', [AuthController::class, 'login']);
 // logout
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
 
-// middleware user
-Route::middleware('auth:api')->group(function () {
-    Route::middleware(['role:user'])->group(function () {  
-       //user
-        Route::apiResource('users', UserController::class);
-    });
-});
 
-// middleware admin
+//GUEST
+Route::apiResource('packages', PackageController::class)->only(['index', 'show']);
+Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
+
+//auth
 Route::middleware('auth:api')->group(function () {
+    //USER
+    //1. update profile user (role customer)
+    Route::put('update', [UserController::class, 'update']);
+
+    //2. confirmations
+    Route::apiResource('confirmations', ConfirmationController::class)->only(['index', 'show', 'store']);
+    
+    //3. transaction
+    Route::apiResource('transactions', TransactionController::class)->only(['index', 'show', 'store']);
+    
+    //4, package
+    Route::apiResource('packages', PackageController::class)->only(['index', 'show']);
+    
+    //5. category
+    Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
+
     Route::middleware(['role:admin'])->group(function () {  
-       //
+        //ADMIN
+        //1. liat user
+        Route::apiResource('users', UserController::class)->only(['index', 'show']);
+
+        //2. confirmationz
+        Route::apiResource('confirmations', ConfirmationController::class);
+
+        //3. transacton
+        Route::apiResource('transactions', TransactionController::class);
+
+        //4. packages
+        Route::apiResource('packages', PackageController::class);
+
+        //5. category
+        Route::apiResource('categories', CategoryController::class);
     });
 });
-
-//categories
-Route::apiResource('categories', CategoryController::class);
-
-//packages
-Route::apiResource('packages', PackageController::class);
-
-//admin
-Route::apiResource('admins', AdminController::class);
-
-//confirmations
-Route::apiResource('confirmations', ConfirmationController::class);
-
-//transactions
-Route::apiResource('transactions', TransactionController::class);
