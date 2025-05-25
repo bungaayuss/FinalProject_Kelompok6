@@ -25,7 +25,8 @@ class ConfirmationController extends Controller
             'amount' => 'required|numeric',
             'payment_date' => 'required|date_format:Y-m-d',
             'status' => 'required|in:Waiting verification,Paid,Rejected',
-            'admins_id' => 'required|integer'
+            'user_id' => 'nullable|integer',
+            'admin_name' => 'nullable|string'
         ]);
 
         if ($validator->fails()){
@@ -35,7 +36,7 @@ class ConfirmationController extends Controller
             ], 422);
         }
 
-        $image = $request->file('photo');
+        $image = $request->file('image');
         $image->store('confirmations', 'public');
 
         $confirmation = Confirmation::create([
@@ -44,7 +45,8 @@ class ConfirmationController extends Controller
             'payment_date' =>  $request-> payment_date,
             'amount' =>  $request-> amount,
             'status' => $request-> status,
-            'admins_id' =>  $request-> admins_id,
+            'user_id' =>  $request-> user_id ?? null,
+            'admin_name' => $request-> admin_name ?? null
         ]);
 
         return response()->json([
@@ -73,10 +75,9 @@ class ConfirmationController extends Controller
 
     public function update(Request $request, $id){
         $validator = Validator::make($request->all(), [
-            'admins_id' => 'required|exists:admins,id',
             'status' => 'required|in:Waiting verification,Paid,Rejected'
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -84,16 +85,10 @@ class ConfirmationController extends Controller
             ], 422);
         }
 
-        $confirmation = Confirmation::find($id);
+        $confirmation = Confirmation::findOrFail($id);
 
-        if (!$confirmation) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Data tidak ditemukan'
-            ], 404);
-        }
-
-        $confirmation->admins_id = $request->admins_id;
+        $confirmation->user_id = auth()->id();
+        $confirmation->admin_name = auth()->user()->name; 
         $confirmation->status = $request->status;
         $confirmation->save();
 
@@ -102,10 +97,12 @@ class ConfirmationController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Status berhasil diperbarui',
-            'data' => $confirmation
+            'data' => [
+                'confirmation' => $confirmation,
+                'admin_name' => $confirmation->admin->name,
+        ]
         ]);
     }
-
 
     public function destroy($id){
         $confirmation = Confirmation::find($id);

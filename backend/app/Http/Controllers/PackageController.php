@@ -29,10 +29,10 @@ class PackageController extends Controller
     public function store(Request $request){
         // 1. Validator
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string',
-            'deskripsi' => 'required|string',
-            'foto' => 'required|image|mimes:jpeg,jpg,png|max:2048',
-            'harga' => 'required|numeric',
+            'name' => 'required|string',
+            'description' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,jpg,png|max:2048',
+            'price' => 'required|numeric',
             'categories_id' => 'required|exists:categories,id',
         ]);
 
@@ -45,15 +45,15 @@ class PackageController extends Controller
         }
 
         // 3. Upload Image
-        $image = $request->file('foto');
+        $image = $request->file('image');
         $image->store('packages', 'public');
         
         // 4. Insert data
         $package = Package::create([
-            'nama' => $request->nama,
-            'deskripsi' => $request->deskripsi,
-            'foto' => $request->foto,
-            'harga' => $request->harga,
+            'name' => $request->name,
+            'description' => $request->description,
+            'image' => $request->image,
+            'price' => $request->price,
             'categories_id' => $request->categories_id
         ]);
         
@@ -95,10 +95,10 @@ class PackageController extends Controller
 
         // 2. Validator
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string',
-            'deskripsi' => 'required|string',
-            'foto' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
-            'harga' => 'required|numeric',
+            'name' => 'required|string',
+            'description' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'price' => 'required|numeric',
             'categories_id' => 'required|exists:categories,id',
         ]);
 
@@ -111,22 +111,22 @@ class PackageController extends Controller
 
         // 3. Siapkan data yang ingin diupdate
         $data = [
-            'nama' => $request->nama,
-            'deskripsi' => $request->deskripsi,
-            'harga' => $request->harga,
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
             'categories_id' => $request->categories_id
         ];
 
         // 4. Handle image (upload & delete image)
-        if ($request->hasFile('foto')) {
-            $image = $request->file('foto');
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
             $image->store('packages', 'public');
 
-            if ($package->foto){
-                Storage::disk('public')->delete('packages/'.$package->foto);
+            if ($package->image){
+                Storage::disk('public')->delete('packages/'.$package->image);
             }
 
-            $data['foto'] = $image->hashName();
+            $data['image'] = $image->hashName();
         }
             
 
@@ -150,9 +150,9 @@ class PackageController extends Controller
             ], 404);
        }
 
-       if ($package->foto){
+       if ($package->image){
         // delete from storage
-        Storage::disk('public')->delete('packages/'.$package->foto);
+        Storage::disk('public')->delete('packages/'.$package->image);
        }
 
        $package->delete();

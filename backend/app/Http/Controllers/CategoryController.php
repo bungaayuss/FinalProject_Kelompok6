@@ -28,7 +28,7 @@ class CategoryController extends Controller
     public function store(Request $request){
         // 1. Validator
         $validator = Validator::make($request->all(), [
-            'nama_kategori' => 'required|string'
+            'category_name' => 'required|string'
         ]);
 
         // 2. Check Validator eror
@@ -41,7 +41,7 @@ class CategoryController extends Controller
 
         // 3. Insert data
         $category = Category::create([
-            'nama_kategori' => $request->nama_kategori
+            'category_name' => $request->category_name
         ]);
         
         // 4. Response
@@ -82,7 +82,7 @@ class CategoryController extends Controller
 
         // 2. Validator
         $validator = Validator::make($request->all(), [
-            'nama_kategori' => 'required|string'
+            'category_name' => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -94,7 +94,7 @@ class CategoryController extends Controller
 
         // 3. Siapkan data yang ingin diupdate
         $data = [
-            'nama_kategori' => $request->nama_kategori
+            'category_name' => $request->category_name
         ];  
 
         // 4. Update data baru ke database

@@ -9,11 +9,12 @@ class Confirmation extends Model
     protected $table = 'confirmations';
 
     protected $fillable = [
-        'transactions_id', 'image', 'amount', 'payment_date', 'status', 'admins_id'
+        'transactions_id', 'image', 'amount', 'payment_date', 'status', 'user_id', 'admin_name'
     ];
+    
 
     public function admin() {
-        return $this->belongsTo(Admins::class, 'admins_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function transaction()

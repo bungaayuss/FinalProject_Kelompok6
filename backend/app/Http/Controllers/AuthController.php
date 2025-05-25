@@ -15,7 +15,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
-            'no_telepon' => 'required',
+            'phone' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -26,7 +26,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'no_telepon' => $request->no_telepon
+            'phone' => $request->phone
         ]);
 
         if ($user) {
@@ -43,7 +43,7 @@ class AuthController extends Controller
         ], 409);
     }
 
-     public function login(Request $request){
+    public function login(Request $request){
         $validator =Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required'
