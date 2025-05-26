@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Confirmation;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,14 +20,13 @@ class ConfirmationController extends Controller
     }
 
     public function store(Request $request){
+
+        $customerId = $request->user()->id;
+        
         $validator = Validator::make($request->all(),[
-            'transactions_id' => 'required|integer',
             'image' => 'required|image|mimes:jpeg,jpg,png|max:2048',
             'amount' => 'required|numeric',
             'payment_date' => 'required|date_format:Y-m-d',
-            'status' => 'required|in:Waiting verification,Paid,Rejected',
-            'user_id' => 'nullable|integer',
-            'admin_name' => 'nullable|string'
         ]);
 
         if ($validator->fails()){
@@ -36,17 +36,29 @@ class ConfirmationController extends Controller
             ], 422);
         }
 
+        $transaction = Transaction::where('user_id', $customerId)
+                    ->where('status', 'Waiting verification')
+                    ->latest()
+                    ->first();
+
+        if (!$transaction) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada transaksi aktif untuk dikonfirmasi.'
+            ], 404);
+        }
+
         $image = $request->file('image');
         $image->store('confirmations', 'public');
 
         $confirmation = Confirmation::create([
-            'transactions_id' =>  $request-> transactions_id,
-            'image' => $request-> hashName(),
+            'transactions_id' => $transaction->id,
+            'image' => $image->hashName(),
             'payment_date' =>  $request-> payment_date,
             'amount' =>  $request-> amount,
-            'status' => $request-> status,
-            'user_id' =>  $request-> user_id ?? null,
-            'admin_name' => $request-> admin_name ?? null
+            'status' => 'Waiting verification',
+            'user_id' => null,
+            'admin_name' => null
         ]);
 
         return response()->json([
