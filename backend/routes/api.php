@@ -14,7 +14,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-
 //Guest
 Route::apiResource('packages', PackageController::class)->only(['index', 'show']);
 Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
@@ -34,32 +33,26 @@ Route::middleware('auth:api')->group(function () {
     Route::put('update', [UserController::class, 'update']);
 
     //2. confirmations
-    Route::apiResource('confirmations', ConfirmationController::class)->only(['index', 'show', 'store']);
+    Route::apiResource('confirmations', ConfirmationController::class)->only(['store']);
     
     //3. transaction
-    Route::apiResource('transactions', TransactionController::class)->only(['index', 'show', 'store']);
-
-    //4. packages
-    Route::apiResource('packages', PackageController::class)->only(['index', 'show']);
-
-    //5. categories
-    Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
+    Route::apiResource('transactions', TransactionController::class)->only(['store']);
 
     //Admin
-    Route::prefix('admin')->middleware(['role:admin'])->group(function () { 
+    Route::middleware(['role:admin'])->group(function () { 
         //1. liat user
         Route::apiResource('users', UserController::class)->only(['index', 'show']);
     
         //2. confirmationz
-        Route::apiResource('confirmations', ConfirmationController::class);
+        Route::apiResource('confirmations', ConfirmationController::class)->except(['store']);
     
         //3. transacton
         Route::apiResource('transactions', TransactionController::class)->except(['store']);
     
         //4. packages
-        Route::apiResource('packages', PackageController::class);
+        Route::apiResource('packages', PackageController::class)->except(['index', 'show']);
     
         //5. category
-        Route::apiResource('categories', CategoryController::class);
+        Route::apiResource('categories', CategoryController::class)->except(methods: ['index','show']);
     });
 });
