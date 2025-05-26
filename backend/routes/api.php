@@ -14,6 +14,11 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+
+//Guest
+Route::apiResource('packages', PackageController::class)->only(['index', 'show']);
+Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
+
 // register
 Route::post('/register', [AuthController::class, 'register']);
 
@@ -23,14 +28,8 @@ Route::post('/login', [AuthController::class, 'login']);
 // logout
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
 
-
-//GUEST
-Route::apiResource('packages', PackageController::class)->only(['index', 'show']);
-Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
-
-//auth
+//User
 Route::middleware('auth:api')->group(function () {
-    //USER
     //1. update profile user (role customer)
     Route::put('update', [UserController::class, 'update']);
 
@@ -39,27 +38,27 @@ Route::middleware('auth:api')->group(function () {
     
     //3. transaction
     Route::apiResource('transactions', TransactionController::class)->only(['index', 'show', 'store']);
-    
-    //4, package
+
+    //4. packages
     Route::apiResource('packages', PackageController::class)->only(['index', 'show']);
-    
-    //5. category
+
+    //5. categories
     Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
 
-    Route::middleware(['role:admin'])->group(function () {  
-        //ADMIN
+    //Admin
+    Route::prefix('admin')->middleware(['role:admin'])->group(function () { 
         //1. liat user
         Route::apiResource('users', UserController::class)->only(['index', 'show']);
-
+    
         //2. confirmationz
         Route::apiResource('confirmations', ConfirmationController::class);
-
+    
         //3. transacton
-        Route::apiResource('transactions', TransactionController::class);
-
+        Route::apiResource('transactions', TransactionController::class)->except(['store']);
+    
         //4. packages
         Route::apiResource('packages', PackageController::class);
-
+    
         //5. category
         Route::apiResource('categories', CategoryController::class);
     });
