@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Package;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -19,14 +20,13 @@ class TransactionController extends Controller
     }
 
     public function store(Request $request){
+        $customerId = $request->user()->id;
+
         $validator = Validator::make($request->all(),[
-            'user_id' => 'required|integer',
-            'admin_id' => 'required|integer',
+            'packages_id' => 'required|integer',
             'event_name' => 'required|string',
             'event_date' => 'required|string',
-            'event_detail' => 'required|string',
-            'transaction_date' => 'required|date_format:Y-m-d',
-            'total' => 'required|numeric'
+            'event_detail' => 'required|string'
         ]);
 
         if ($validator->fails()){
@@ -36,14 +36,17 @@ class TransactionController extends Controller
             ], 422);
         }
 
+        $package = Package::findOrFail($request->packages_id);
+        $total = $package->price;
+
         $transaction = Transaction::create([
-            'user_id' => $request->user_id,
-            'admin_id' => $request->admin_id,
+            'user_id' => $customerId,
+            'packages_id' => $request->packages_id,
             'event_name' => $request->event_name,
             'event_date' => $request->event_date,
             'event_detail' => $request->event_detail,
-            'transaction_date' => $request->transaction_date,
-            'total' => $request->total,
+            'transaction_date' => now()->toDateString(),
+            'total' => $total,
             'status' => 'Waiting verification'
         ]);
 

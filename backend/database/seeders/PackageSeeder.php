@@ -14,47 +14,42 @@ class PackageSeeder extends Seeder
     public function run(): void
     {
         Package::create([
-            'id' => 1,
-            'nama' => 'Paket Wedding Modern Glam',
-            'deskripsi' => 'Venue indoor + Dekorasi glamor + Dokumentasi full day',
-            'foto' => 'wedding_glam.jpg',
-            'harga' => 12000000,
+            'name' => 'Paket Wedding Modern Glam',
+            'description' => 'Venue indoor + Dekorasi glamor + Dokumentasi full day',
+            'image' => 'wedding_glam.jpg',
+            'price' => 12000000,
             'categories_id' => 1,
         ]);
 
         Package::create([
-            'id' => 2,
-            'nama' => 'Paket Ulang Tahun Aesthetic',
-            'deskripsi' => 'Dekorasi ala Pinterest + Neon Sign',
-            'foto' => 'birthday_aesthetic.jpg',
-            'harga' => 3000000,
+            'name' => 'Paket Ulang Tahun Aesthetic',
+            'description' => 'Dekorasi ala Pinterest + Neon Sign',
+            'image' => 'birthday_aesthetic.jpg',
+            'price' => 3000000,
             'categories_id' => 2,
         ]);
 
         Package::create([
-            'id' => 3,
-            'nama' => 'Paket Webinar Premium',
-            'deskripsi' => 'MC Online + Zoom Hosting + Backdrop',
-            'foto' => 'corporate_webinar.jpg',
-            'harga' => 5000000,
+            'name' => 'Paket Webinar Premium',
+            'description' => 'MC Online + Zoom Hosting + Backdrop',
+            'image' => 'corporate_webinar.jpg',
+            'price' => 5000000,
             'categories_id' => 3,
         ]);
 
         Package::create([
-            'id' => 4,
-            'nama' => 'Paket Graduation Garden Party',
-            'deskripsi' => 'Outdoor setup + Foto Booth + Snack Table',
-            'foto' => 'graduation_garden.jpg',
-            'harga' => 5500000,
+            'name' => 'Paket Graduation Garden Party',
+            'description' => 'Outdoor setup + Foto Booth + Snack Table',
+            'image' => 'graduation_garden.jpg',
+            'price' => 5500000,
             'categories_id' => 4,
         ]);
 
         Package::create([
-            'id' => 5,
-            'nama' => 'Paket Engagement Bohemian',
-            'deskripsi' => 'Tema rustic + Lampu gantung + Standing Flowers',
-            'foto' => 'engagement_boho.jpg',
-            'harga' => 6000000,
+            'name' => 'Paket Engagement Bohemian',
+            'description' => 'Tema rustic + Lampu gantung + Standing Flowers',
+            'image' => 'engagement_boho.jpg',
+            'price' => 6000000,
             'categories_id' => 5,
         ]);
     }

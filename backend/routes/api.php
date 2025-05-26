@@ -2,32 +2,57 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PackageController;
-use App\Http\Controllers\TransactionDetailController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConfirmationController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Pest\Plugins\Only;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-//categories
-Route::get('/categories', [CategoryController::class, 'index']);
+//Guest
+Route::apiResource('packages', PackageController::class)->only(['index', 'show']);
+Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
 
-//packages
-Route::get('/packages', [PackageController::class, 'index']);
+// register
+Route::post('/register', [AuthController::class, 'register']);
 
-//user
-Route::apiResource('users', UserController::class);
+// login
+Route::post('/login', [AuthController::class, 'login']);
 
-//admin
-Route::apiResource('admins', AdminController::class);
+// logout
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
 
-//confirmations
-Route::apiResource('confirmations', ConfirmationController::class);
+//User
+Route::middleware('auth:api')->group(function () {
+    //1. update profile user (role customer)
+    Route::put('update', [UserController::class, 'update']);
 
-//transactions
-Route::apiResource('transactions', TransactionController::class);
+    //2. confirmations
+    Route::apiResource('confirmations', ConfirmationController::class)->only(['store']);
+    
+    //3. transaction
+    Route::apiResource('transactions', TransactionController::class)->only(['store']);
+
+    //Admin
+    Route::middleware(['role:admin'])->group(function () { 
+        //1. liat user
+        Route::apiResource('users', UserController::class)->only(['index', 'show']);
+    
+        //2. confirmationz
+        Route::apiResource('confirmations', ConfirmationController::class)->except(['store']);
+    
+        //3. transacton
+        Route::apiResource('transactions', TransactionController::class)->except(['store']);
+    
+        //4. packages
+        Route::apiResource('packages', PackageController::class)->except(['index', 'show']);
+    
+        //5. category
+        Route::apiResource('categories', CategoryController::class)->except(methods: ['index','show']);
+    });
+});

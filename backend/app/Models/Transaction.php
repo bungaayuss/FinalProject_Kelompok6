@@ -11,4 +11,14 @@ class Transaction extends Model
     protected $fillable = [
         'user_id', 'packages_id', 'event_name', 'event_date', 'event_detail', 'transaction_date', 'total', 'status'
     ];
+
+    public function package()
+    {
+        return $this->belongsTo(Package::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
