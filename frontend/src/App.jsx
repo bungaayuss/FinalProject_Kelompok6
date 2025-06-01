@@ -1,35 +1,22 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// dari sini
+import { BrowserRouter, Routes, Route } from "react-router";
+import "./index.css";
+import Dashboard from "./pages/admin/dashboard";
+import DUser from "./pages/admin/dUser";
+import DAdmin from "./pages/admin/dAdmin";
+import DKategori from "./pages/admin/dKategori";
+import DPackage from "./pages/admin/dPackage";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route index path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/users" element={<DUser />} />
+        <Route path="/admin/admin" element={<DAdmin />} />
+        <Route path="/admin/kategori" element={<DKategori />} />
+        <Route path="/admin/package" element={<DPackage />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
-export default App

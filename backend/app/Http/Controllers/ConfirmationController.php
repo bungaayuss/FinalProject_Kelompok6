@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Confirmation;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,13 +20,13 @@ class ConfirmationController extends Controller
     }
 
     public function store(Request $request){
+
+        $customerId = $request->user()->id;
+        
         $validator = Validator::make($request->all(),[
-            'transactions_id' => 'required|integer',
             'image' => 'required|image|mimes:jpeg,jpg,png|max:2048',
             'amount' => 'required|numeric',
             'payment_date' => 'required|date_format:Y-m-d',
-            'status' => 'required|in:Waiting verification,Paid,Rejected',
-            'admins_id' => 'required|integer'
         ]);
 
         if ($validator->fails()){
@@ -35,16 +36,29 @@ class ConfirmationController extends Controller
             ], 422);
         }
 
-        $image = $request->file('photo');
+        $transaction = Transaction::where('user_id', $customerId)
+                    ->where('status', 'Waiting verification')
+                    ->latest()
+                    ->first();
+
+        if (!$transaction) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada transaksi aktif untuk dikonfirmasi.'
+            ], 404);
+        }
+
+        $image = $request->file('image');
         $image->store('confirmations', 'public');
 
         $confirmation = Confirmation::create([
-            'transactions_id' =>  $request-> transactions_id,
-            'image' => $request-> hashName(),
+            'transactions_id' => $transaction->id,
+            'image' => $image->hashName(),
             'payment_date' =>  $request-> payment_date,
             'amount' =>  $request-> amount,
-            'status' => $request-> status,
-            'admins_id' =>  $request-> admins_id,
+            'status' => 'Waiting verification',
+            'user_id' => null,
+            'admin_name' => null
         ]);
 
         return response()->json([
@@ -73,10 +87,9 @@ class ConfirmationController extends Controller
 
     public function update(Request $request, $id){
         $validator = Validator::make($request->all(), [
-            'admins_id' => 'required|exists:admins,id',
             'status' => 'required|in:Waiting verification,Paid,Rejected'
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -84,16 +97,10 @@ class ConfirmationController extends Controller
             ], 422);
         }
 
-        $confirmation = Confirmation::find($id);
+        $confirmation = Confirmation::findOrFail($id);
 
-        if (!$confirmation) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Data tidak ditemukan'
-            ], 404);
-        }
-
-        $confirmation->admins_id = $request->admins_id;
+        $confirmation->user_id = auth()->id();
+        $confirmation->admin_name = auth()->user()->name; 
         $confirmation->status = $request->status;
         $confirmation->save();
 
@@ -102,10 +109,12 @@ class ConfirmationController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Status berhasil diperbarui',
-            'data' => $confirmation
+            'data' => [
+                'confirmation' => $confirmation,
+                'admin_name' => $confirmation->admin->name,
+        ]
         ]);
     }
-
 
     public function destroy($id){
         $confirmation = Confirmation::find($id);
