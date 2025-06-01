@@ -23,7 +23,7 @@ export default function TableCard({ title, columns, data, renderAction }) {
               data.map((row, idx) => (
                 <tr key={idx}>
                   {columns.map((col, i) => (
-                    <td key={i}>{row[col]}</td>
+                    <td key={i}>{row[col.toLowerCase()]}</td>
                   ))}
                   <td>{renderAction ? renderAction(row) : null}</td>
                 </tr>
