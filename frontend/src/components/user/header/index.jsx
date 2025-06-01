@@ -1,83 +1,77 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import "../../../styles/header.css";
 
-export default function Header({ isLoggedIn, username, onLogout }) {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.clear();
-    if (onLogout) onLogout();
-    navigate("/login");
-  };
-
+export default function Header() {
   return (
-    <header
-      className="d-flex align-items-center justify-content-between py-3 border-bottom"
-      style={{
-        background: "rgb(179,199,230)",
-        fontFamily: "'Poppins', sans-serif",
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        zIndex: 101,
-        backdropFilter: "blur(8px) brightness(1.2)",
-        WebkitBackdropFilter: "blur(8px) brightness(1.2)",
-      }}
-    >
-      {/* Logo */}
-      <div style={{ paddingLeft: "20px" }}>
-        <Link to="/" className="d-inline-flex align-items-center text-decoration-none">
-          <img src="/Event.png" alt="Logo" style={{ height: "60px", marginRight: "16px" }} />
+    <header className="navbar navbar-expand-lg bg-white fixed-top border-bottom shadow-sm">
+      <div className="container-fluid px-4">
+        {/* Logo */}
+        <Link
+          to="/"
+          className="navbar-brand d-flex align-items-center fw-bold"
+          style={{ color: "#014AB0" }}
+        >
+          <img
+            src="/Event.png"
+            alt="Logo"
+            style={{ height: "60px", marginRight: "6px" }}
+          />
+          Event Pora
         </Link>
-      </div>
 
-      {/* Navigation */}
-      <ul className="nav ms-auto me-3 d-flex align-items-center">
-        <li><Link to="/" className="nav-link px-2" style={{ color: "#1C57BC", fontWeight: "bold" }}>Home</Link></li>
-        <li><Link to="/about" className="nav-link px-2" style={{ color: "#1C57BC", fontWeight: "bold" }}>About</Link></li>
-        <li><Link to="/service" className="nav-link px-2" style={{ color: "#1C57BC", fontWeight: "bold" }}>Service & Package</Link></li>
-        <li><Link to="/contact" className="nav-link px-2" style={{ color: "#1C57BC", fontWeight: "bold" }}>Contact</Link></li>
-      </ul>
+        {/* Navbar content */}
+        <div
+          className="collapse navbar-collapse justify-content-end"
+          id="navbarContent"
+        >
+          <ul className="navbar-nav align-items-center mb-2 mb-lg-0">
+            <li className="nav-item">
+              <Link to="/" className="nav-link nav-link-custom">
+                Home
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/about" className="nav-link nav-link-custom">
+                About
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/service" className="nav-link nav-link-custom">
+                Service & Package
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/contact" className="nav-link nav-link-custom">
+                Contact
+              </Link>
+            </li>
+          </ul>
 
-      {/* Login / Profile */}
-      <div className="d-flex align-items-center" style={{ paddingRight: "20px" }}>
-        {isLoggedIn ? (
-          <>
-            <img
-              src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png"
-              alt="User"
-              style={{
-                width: "30px",
-                height: "30px",
-                borderRadius: "50%",
-                objectFit: "cover",
-                marginRight: "10px",
-              }}
-            />
-            <span className="me-3 fw-bold text-primary">{username}</span>
-            <button
-              className="btn btn-outline-danger btn-sm"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
-          </>
-        ) : (
+          {/* Register & Login */}
           <Link
             to="/login"
-            className="btn btn-outline-primary"
+            className="btn"
             style={{
-              background: "#1C57BC",
+              backgroundColor: "#014AB0",
               color: "#fff",
-              borderColor: "#1C57BC",
+              marginRight: "10px",
               marginLeft: "10px",
-              fontWeight: "bold",
             }}
           >
             Login
           </Link>
-        )}
+          <Link
+            to="/register"
+            className="btn me-2"
+            style={{
+              border: "2px solid #014AB0",
+              color: "#014AB0",
+              backgroundColor: "transparent",
+            }}
+          >
+            Register
+          </Link>
+        </div>
       </div>
     </header>
   );

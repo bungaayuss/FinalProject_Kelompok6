@@ -33,7 +33,7 @@ function App() {
   return (
     <BrowserRouter>
       <Header isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout} />
-      <div style={{ paddingTop: "90px" }}>{/* supaya konten gak tertutup header fixed */}
+      <div style={{ paddingTop: "90px" }}>
         <Routes>
           <Route index element={<Home />} />
           <Route path="/home" element={<Home />} />

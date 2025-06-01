@@ -1,44 +1,42 @@
+import React from "react";
+import "../../../styles/hero.css";
+
 export default function Hero() {
-    return (
-        <div
-            id="home"
-            style={{
-                minHeight: "100vh",
-                width: "100%",
-                backgroundImage: "url('/BgFlower.png')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontFamily: "'Poppins', sans-serif",
-                position: "relative",
-                overflow: "hidden"
-            }}
-        >
-            <div style={{ textAlign: "center" }}>
-                <h1
-                    style={{
-                        color: "#fff",
-                        fontWeight: 700,
-                        fontSize: "2.5rem",
-                        textShadow: "0 2px 16px rgba(0,0,0,0.25)",
-                        // background: "rgba(20,48,92,0.3)",
-                        padding: "32px 24px 24px 24px",
-                        borderRadius: "16px",
-                        fontFamily: "'Poppins', sans-serif",
-                        marginBottom: "24px"
-                    }}
-                >
-                    MAKE YOU’RE BEAUTIFUL MOMENT WITH <br /> EVENT PORA
-                </h1>
-                <hr style={{
-                    border: "none",
-                    borderTop: "4px solid #fff",
-                    width: "180px",
-                    margin: "0 auto"
-                }} />
-            </div>
+  const stats = [
+    { value: "150+", label: "Events handled" },
+    { value: "120+", label: "Happy clients" },
+    { value: "20K+", label: "Total attendees" },
+  ];
+
+  return (
+    <>
+      <div
+        id="home"
+        className="hero-container d-flex align-items-center justify-content-center text-center"
+      >
+        <div className="hero-content w-100 px-0">
+          <h1 className="hero-title fw-bold mb-4">
+            MAKE YOU’RE BEAUTIFUL MOMENT WITH <br /> EVENT PORA
+          </h1>
+          <hr className="hero-divider" />
         </div>
-    );
+      </div>
+
+      <section className="bg-light py-5">
+        <div className="container text-center">
+          <div className="row justify-content-center">
+            {stats.map((stat, index) => (
+              <div
+                key={index}
+                className="col-6 col-md-4 mb-4 mb-md-0 stats-col"
+              >
+                <h2 className="text-primary fw-bold">{stat.value}</h2>
+                <p className="text-muted">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
+  );
 }
