@@ -1,88 +1,208 @@
+// dari sini
 import React, { useState } from "react";
+import {
+  FaHome,
+  FaDatabase,
+  FaMoneyBill,
+  FaCalendarAlt,
+  FaCog,
+  FaSignOutAlt,
+  FaChevronDown,
+  FaChevronUp,
+} from "react-icons/fa";
+import { Link } from "react-router";
 
 export default function Sidebar() {
-    return (
-        <>
-            <style>
-                {`
-                @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600&display=swap');
-                `}
-            </style>
-            <aside
-                style={{
-                    width: "250px",
-                    height: "100vh",
-                    background: "#034F75",
-                    color: "#fff",
-                    display: "flex",
-                    flexDirection: "column",
-                    fontFamily: "'Urbanist', sans-serif",
-                    position: "fixed",
-                    left: 0,
-                    top: 0,
-                    zIndex: 1000,
-                    borderRadius: "22px"
-                }}
-            >
-                {/* Logo dan Judul */}
-                <div style={{ display: "flex", alignItems: "center", padding: "24px 20px 16px 20px", marginBottom: "32px" }}>
-                    <img src="/Event.png" alt="Event" style={{ height: "40px", marginRight: "12px" }} />
-                    <span style={{ fontWeight: 600, fontSize: "20px" }}>Event Pora</span>
-                </div>
+  const [openKelola, setOpenKelola] = useState(false);
+  const [openTransaksi, setOpenTransaksi] = useState(false);
 
-                {/* Menu */}
-                <nav style={{ flex: 1 }}>
-                    <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                        <SidebarItem iconClass="fa-solid fa-house" text="Dashboard" />
-                        <SidebarItem iconClass="fa-solid fa-file" text="Kelola data" />
-                        <SidebarItem iconClass="fa-solid fa-credit-card" text="Transaksi" />
-                        <SidebarItem iconClass="fa-solid fa-qrcode" text="Event" />
-                        <SidebarItem iconClass="fa-solid fa-gear" text="Settings" />
-                    </ul>
-                </nav>
+  return (
+    <div
+      className="text-white"
+      style={{
+        width: "250px",
+        height: "calc(100vh - 40px)",
+        marginTop: "20px",
+        marginLeft: "20px",
+        marginBottom: "20px",
+        borderRadius: "15px",
+        background: "#033b5d",
+        display: "flex",
+        flexDirection: "column",
+        padding: "1rem",
+      }}
+    >
+      <h4 className="mb-4 d-flex align-items-center justify-content-start gap-2">
+        <img
+          src="https://i.pravatar.cc/40"
+          alt="Profile"
+          style={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "50%",
+            objectFit: "cover",
+            border: "2px solid white",
+          }}
+        />
+        Event Pora
+      </h4>
 
-                {/* Log Out di bawah */}
-                <div style={{ margin: "20px", listStyle: "none", padding: 0 }}>
-                    <SidebarItem iconClass="fa-solid fa-right-from-bracket" text="Log Out" />
-                </div>
-            </aside>
-        </>
-    );
-}
-
-// Komponen SidebarItem
-function SidebarItem({ iconClass, text }) {
-    const [hover, setHover] = useState(false);
-
-    return (
-        <li
-            style={{
-                marginBottom: "8px",
-                borderRadius: "44px",
-                transition: "background 0.2s",
-                cursor: "pointer"
-            }}
-        >
-            <a
-                href="#"
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "12px 16px",
-                    color: hover ? "#034F75" : "#fff",
-                    textDecoration: "none",
-                    borderRadius: "44px",
-                    background: hover ? "#fff" : "transparent",
-                    fontWeight: 500,
-                    transition: "all 0.2s",
-                    fontFamily: "'Urbanist', sans-serif"
-                }}
-                onMouseEnter={() => setHover(true)}
-                onMouseLeave={() => setHover(false)}
-            >
-                <i className={iconClass} style={{ fontSize: "20px", marginRight: "16px" }}></i>
-                <span>{text}</span>
-            </a>
+      <ul className="nav flex-column gap-2">
+        <li className="nav-item d-flex align-items-center gap-2">
+          <FaHome />
+          <Link
+            to="/admin/dashboard"
+            className="text-white text-decoration-none"
+          >
+            Dashboard
+          </Link>
         </li>
-    );
+
+        <li className="nav-item position-relative">
+          <div
+            className="d-flex align-items-center gap-2"
+            style={{ cursor: "pointer" }}
+            onClick={() => setOpenKelola(!openKelola)}
+          >
+            <FaDatabase /> Kelola data
+            <span style={{ marginLeft: "auto" }}>
+              {openKelola ? <FaChevronUp /> : <FaChevronDown />}
+            </span>
+          </div>
+
+          {openKelola && (
+            <div
+              style={{
+                position: "relative",
+                paddingLeft: "16px",
+                marginTop: "8px",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  left: "4px",
+                  top: 0,
+                  bottom: 0,
+                  width: "2px",
+                  backgroundColor: "white",
+                  borderRadius: "2px",
+                }}
+              />
+              <ul className="nav flex-column mt-2 gap-1">
+                <li className="nav-item" style={{ paddingLeft: "12px" }}>
+                  <Link
+                    to="/admin/users"
+                    className="text-white text-decoration-none"
+                  >
+                    Data Users
+                  </Link>
+                </li>
+                <li className="nav-item" style={{ paddingLeft: "12px" }}>
+                  <Link
+                    to="/admin/admin"
+                    className="text-white text-decoration-none"
+                  >
+                    Data Admin
+                  </Link>
+                </li>
+                <li className="nav-item" style={{ paddingLeft: "12px" }}>
+                  <Link
+                    to="/admin/kategori"
+                    className="text-white text-decoration-none"
+                  >
+                    Data Kategori
+                  </Link>
+                </li>
+                <li className="nav-item" style={{ paddingLeft: "12px" }}>
+                  <Link
+                    to="/admin/package"
+                    className="text-white text-decoration-none"
+                  >
+                    Data Package
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          )}
+        </li>
+
+        <li className="nav-item position-relative">
+          <div
+            className="d-flex align-items-center gap-2"
+            style={{ cursor: "pointer" }}
+            onClick={() => setOpenTransaksi(!openTransaksi)}
+          >
+            <FaMoneyBill /> Transaksi
+            <span style={{ marginLeft: "auto" }}>
+              {openTransaksi ? <FaChevronUp /> : <FaChevronDown />}
+            </span>
+          </div>
+
+          {openTransaksi && (
+            <div
+              style={{
+                position: "relative",
+                paddingLeft: "16px",
+                marginTop: "8px",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  left: "4px",
+                  top: 0,
+                  bottom: 0,
+                  width: "2px",
+                  backgroundColor: "white",
+                  borderRadius: "2px",
+                }}
+              />
+              <ul className="nav flex-column mt-2 gap-1">
+                <li className="nav-item" style={{ paddingLeft: "12px" }}>
+                  <Link
+                    to="/admin/transaksi"
+                    className="text-white text-decoration-none"
+                  >
+                    Daftar Transaksi
+                  </Link>
+                </li>
+                <li className="nav-item" style={{ paddingLeft: "12px" }}>
+                  <Link
+                    to="/admin/laporan"
+                    className="text-white text-decoration-none"
+                  >
+                    Laporan Konfirmasi
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          )}
+        </li>
+
+        <li className="nav-item d-flex align-items-center gap-2">
+          <FaCalendarAlt />
+          <Link to="/admin/event" className="text-white text-decoration-none">
+            Event
+          </Link>
+        </li>
+        <li className="nav-item d-flex align-items-center gap-2">
+          <FaCog />
+          <Link
+            to="/admin/pengaturan"
+            className="text-white text-decoration-none"
+          >
+            Pengaturan
+          </Link>
+        </li>
+      </ul>
+
+      <div
+        className="mt-auto d-flex align-items-center gap-2"
+        style={{ cursor: "pointer" }}
+      >
+        <FaSignOutAlt /> Keluar
+      </div>
+    </div>
+  );
 }

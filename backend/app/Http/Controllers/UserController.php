@@ -20,13 +20,10 @@ class UserController extends Controller
 
     public function store(Request $request){
         $validator = Validator::make($request->all(),[
-            'username' => 'required|string|max:100',
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|unique:users',
             'password' => 'required|string',
-            'no_telepon' => 'required|string',
-            'email' => 'required|string',
-            'kota' => 'required|string',
-            'nama_acara' => 'required|string',
-            'tanggal_acara' => 'required|date_format:Y-m-d'
+            'phone' => 'required|string'
         ]);
 
         if ($validator->fails()){
@@ -37,13 +34,10 @@ class UserController extends Controller
         }
 
         $users = User::create([
-            'username' => $request-> username,
+            'name' => $request-> name,
+            'email' => $request-> email,
             'password' =>  $request-> password,
-            'no_telepon' =>  $request-> no_telepon,
-            'email' =>  $request-> email,
-            'kota' =>  $request-> kota,
-            'nama_acara' =>  $request-> nama_acara,
-            'tanggal_acara' =>  $request-> tanggal_acara
+            'phone' =>  $request-> phone
         ]);
 
         return response()->json([
@@ -72,13 +66,10 @@ class UserController extends Controller
 
     public function update(Request $request, $id){
         $validator = Validator::make($request->all(), [
-            'username' => 'required|string',
+            'name' => 'required|string|max:100',
+            'email' => 'required|email',
             'password' => 'required|string',
-            'no_telepon' => 'required|string',
-            'email' => 'required|string',
-            'kota' => 'required|string',
-            'nama_acara' => 'required|string',
-            'tanggal_acara' => 'required|date_format:Y-m-d'
+            'phone' => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -98,13 +89,10 @@ class UserController extends Controller
         }
 
         $user->update([
-            'username' => $request->username,
-            'password' => $request->password,
-            'no_telepon' => $request->no_telepon,
+            'name' => $request->name,
             'email' => $request->email,
-            'kota' => $request->kota,
-            'nama_acara' => $request->nama_acara,
-            'tanggal_acara' => $request->tanggal_acara
+            'password' => $request->password,
+            'phone' => $request->phone
         ]);
 
         return response()->json([
