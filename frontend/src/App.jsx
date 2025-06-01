@@ -7,7 +7,6 @@ import DAdmin from "./pages/admin/dAdmin";
 import DKategori from "./pages/admin/dKategori";
 import DPackage from "./pages/admin/dPackage";
 
-
 export default function App() {
   return (
     <BrowserRouter>
