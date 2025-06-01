@@ -1,7 +1,13 @@
+// dari sini
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default function FormTambahPackageEvent({ show, onClose, onSubmit, initialData }) {
+export default function FormTambahPackageEvent({
+  show,
+  onClose,
+  onSubmit,
+  initialData,
+}) {
   const [formData, setFormData] = useState({
     kategori: "",
     nama: "",
@@ -17,7 +23,8 @@ export default function FormTambahPackageEvent({ show, onClose, onSubmit, initia
         kategori: initialData.kategori || "",
         nama: initialData.nama || "",
         deskripsi: initialData.deskripsi || "",
-        harga: initialData.harga !== undefined ? initialData.harga.toString() : "",
+        harga:
+          initialData.harga !== undefined ? initialData.harga.toString() : "",
         foto: initialData.foto || "",
       });
     } else {
@@ -61,13 +68,23 @@ export default function FormTambahPackageEvent({ show, onClose, onSubmit, initia
   if (!show) return null;
 
   return (
-    <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+    <div
+      className="modal d-block"
+      tabIndex="-1"
+      style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+    >
       <div className="modal-dialog">
         <div className="modal-content">
           <form onSubmit={handleSubmit}>
             <div className="modal-header">
-              <h5 className="modal-title">{initialData ? "Edit Package Event" : "Tambah Package Event"}</h5>
-              <button type="button" className="btn-close" onClick={onClose}></button>
+              <h5 className="modal-title">
+                {initialData ? "Edit Package Event" : "Tambah Package Event"}
+              </h5>
+              <button
+                type="button"
+                className="btn-close"
+                onClick={onClose}
+              ></button>
             </div>
             <div className="modal-body">
               <div className="mb-3">
@@ -131,7 +148,11 @@ export default function FormTambahPackageEvent({ show, onClose, onSubmit, initia
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" onClick={onClose}>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={onClose}
+              >
                 Batal
               </button>
               <button type="submit" className="btn btn-primary">
