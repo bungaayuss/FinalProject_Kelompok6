@@ -1,3 +1,4 @@
+// dari sini
 import React from "react";
 
 export default function NotifikasiCard({ data }) {
