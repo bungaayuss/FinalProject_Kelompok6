@@ -14,27 +14,27 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         Category::create([
-            'id' => 1, 
+            // 'id' => 1, 
             'nama_kategori' => 'Modern Wedding'
         ]);
 
         Category::create([
-            'id' => 2, 
+            // 'id' => 2, 
             'nama_kategori' => 'Aesthetic Birthday'
         ]);
 
         Category::create([
-            'id' => 3, 
+            // 'id' => 3, 
             'nama_kategori' => 'Corporate Event'
         ]);
 
         Category::create([
-            'id' => 4, 
+            // 'id' => 4, 
             'nama_kategori' => 'Graduation Party'
         ]);
 
         Category::create([
-            'id' => 5, 
+            // 'id' => 5, 
             'nama_kategori' => 'Rustic Engagement'
         ]);
     }

@@ -14,7 +14,7 @@ class PackageSeeder extends Seeder
     public function run(): void
     {
         Package::create([
-            'id' => 1,
+            // 'id' => 1,
             'nama' => 'Paket Wedding Modern Glam',
             'deskripsi' => 'Venue indoor + Dekorasi glamor + Dokumentasi full day',
             'foto' => 'wedding_glam.jpg',
@@ -23,7 +23,7 @@ class PackageSeeder extends Seeder
         ]);
 
         Package::create([
-            'id' => 2,
+            // 'id' => 2,
             'nama' => 'Paket Ulang Tahun Aesthetic',
             'deskripsi' => 'Dekorasi ala Pinterest + Neon Sign',
             'foto' => 'birthday_aesthetic.jpg',
@@ -32,7 +32,7 @@ class PackageSeeder extends Seeder
         ]);
 
         Package::create([
-            'id' => 3,
+            // 'id' => 3,
             'nama' => 'Paket Webinar Premium',
             'deskripsi' => 'MC Online + Zoom Hosting + Backdrop',
             'foto' => 'corporate_webinar.jpg',
@@ -41,7 +41,7 @@ class PackageSeeder extends Seeder
         ]);
 
         Package::create([
-            'id' => 4,
+            // 'id' => 4,
             'nama' => 'Paket Graduation Garden Party',
             'deskripsi' => 'Outdoor setup + Foto Booth + Snack Table',
             'foto' => 'graduation_garden.jpg',
@@ -50,7 +50,7 @@ class PackageSeeder extends Seeder
         ]);
 
         Package::create([
-            'id' => 5,
+            // 'id' => 5,
             'nama' => 'Paket Engagement Bohemian',
             'deskripsi' => 'Tema rustic + Lampu gantung + Standing Flowers',
             'foto' => 'engagement_boho.jpg',
