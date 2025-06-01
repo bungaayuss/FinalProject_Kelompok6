@@ -1,65 +1,51 @@
-<<<<<<< HEAD
-import './App.css'
+import './App.css';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 import Home from './pages/home/index.jsx';
 import Contact from './pages/contact/index.jsx';
 import About from './pages/about/index.jsx';
 import Service from './pages/service/index.jsx';
 import Login from './pages/login/index.jsx';
+import Header from './components/user/header/index.jsx';  // pastikan path sesuai
+import CategoryPackages from './components/user/CategoryPackages.jsx';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const loginStatus = localStorage.getItem("isLoggedIn") === "true";
+    const storedUsername = localStorage.getItem("username");
+
+    setIsLoggedIn(loginStatus);
+    setUsername(storedUsername || "");
+  }, []);
+
+  // Callback untuk logout supaya state berubah di App juga
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUsername("");
+  };
+
+  // Callback login bisa diberikan ke halaman Login jika ingin update state App saat login sukses
+
   return (
-    <div className="container">
-      <BrowserRouter>
+    <BrowserRouter>
+      <Header isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout} />
+      <div style={{ paddingTop: "90px" }}>{/* supaya konten gak tertutup header fixed */}
         <Routes>
           <Route index element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/service" element={<Service />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} />} />
+          <Route path="/kategori/:id" element={<CategoryPackages />} />
         </Routes>
-      </BrowserRouter>
-    </div>
-  )
-}
-=======
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-
-import About from "./components/about";
-import Login from "./components/login";
-import Register from "./components/register";
-import Services from "./components/services";
-import Packages from "./components/packages";
-
-import "./App.css";
-
-export default function App() {
-  return (
-    <Router>
-      <header>
-        <nav className="navbar">
-          <div className="logo">Eventify</div>
-          <div className="nav-links">
-            <Link to="/">About</Link>
-            <Link to="/services">Services</Link>
-            <Link to="/packages">Packages</Link>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
-          </div>
-        </nav>
-      </header>
->>>>>>> 30ac28ccfa2ed412e9fffed9e408ecf29ef8b28c
-
-      <main className="main-content">
-        <Routes>
-          <Route path="/" element={<About />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/packages" element={<Packages />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
-      </main>
-    </Router>
+      </div>
+    </BrowserRouter>
   );
 }
+
+export default App;
