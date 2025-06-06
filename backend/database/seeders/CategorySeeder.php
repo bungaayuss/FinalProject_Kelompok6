@@ -14,28 +14,28 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         Category::create([
-            'category_name' => 'Modern Wedding',
-            'description' => 'Pernikahan bergaya modern dengan dekorasi minimalis dan elegan.'
+            'category_name' => 'Wedding',
+            'description' => 'Paket pernikahan dengan berbagai tema seperti glamor, rustic, dan outdoor elegan.'
         ]);
 
         Category::create([
-            'category_name' => 'Aesthetic Birthday',
-            'description' => 'Pesta ulang tahun dengan tema estetika dan dekorasi kekinian.'
+            'category_name' => 'Birthday',
+            'description' => 'Paket ulang tahun dengan tema aesthetic, kartun, minimalis, dan outdoor party.'
         ]);
 
         Category::create([
-            'category_name' => 'Corporate Event',
-            'description' => 'Acara perusahaan seperti seminar, workshop, atau gathering formal.'
+            'category_name' => 'Concert & Entertainment',
+            'description' => 'Paket acara hiburan seperti konser musik, pertunjukan, dan event outdoor seru.'
         ]);
 
         Category::create([
             'category_name' => 'Graduation Party',
-            'description' => 'Perayaan kelulusan yang meriah dengan tema kekinian dan dokumentasi lengkap.'
+            'description' => 'Paket pesta kelulusan dengan dekorasi indoor, outdoor, dan tema kekinian.'
         ]);
 
         Category::create([
-            'category_name' => 'Rustic Engagement',
-            'description' => 'Acara lamaran dengan tema rustic, dekorasi kayu, dan suasana hangat.'
+            'category_name' => 'Engagement',
+            'description' => 'Paket acara lamaran dengan tema rustic, bohemian, klasik, dan garden party.'
         ]);
     }
 }
