@@ -22,7 +22,7 @@ export default function DetailModal({ onClose, transaksi }) {
           </div>
           <div className="modal-body p-4 pt-0">
             <p>
-              <strong>Nama Event:</strong> {transaksi["nama event"]}
+              <strong>Nama Event:</strong> {transaksi["event_name"]}
             </p>
             <p>
               <strong>Total:</strong> {transaksi.total}
@@ -31,7 +31,7 @@ export default function DetailModal({ onClose, transaksi }) {
               <strong>Status:</strong> {transaksi.status}
             </p>
             <p>
-              <strong>Tanggal:</strong> {transaksi.tanggal}
+              <strong>Tanggal:</strong> {transaksi.transaction_date}
             </p>
           </div>
         </div>

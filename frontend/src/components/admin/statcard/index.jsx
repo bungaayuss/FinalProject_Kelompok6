@@ -1,4 +1,4 @@
-export default function StatCard({ icon, title, count }) {
+export default function StatCard({ icon, title, count, percentage }) {
   return (
     <div
       className="bg-white rounded-4 shadow-sm p-3 position-relative overflow-hidden"
@@ -32,7 +32,7 @@ export default function StatCard({ icon, title, count }) {
 
       <hr className="my-2" />
 
-      <div className="text-muted text-start fw-medium small">+50% dari minggu lalu</div>
+      <div className="text-muted text-start fw-medium small">+{percentage} dari minggu</div>
     </div>
   );
 }

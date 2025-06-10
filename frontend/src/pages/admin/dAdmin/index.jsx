@@ -1,41 +1,30 @@
-import React, { useState } from "react";
-import { FaTrash } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Sidebar from "../../../components/admin/sidebar";
 import Topbar from "../../../components/admin/topbar";
 import TableCard from "../../../components/admin/table";
-import DetailModal from "../../../components/admin/detailModal";
+import { getUsers } from "../../../_services/user";
 
 export default function DaftarAdmin() {
-  const [showModal, setShowModal] = useState(false);
-  const [selectedAdmin, setSelectedAdmin] = useState(null);
+  const [users, setUsers] = useState([]);
 
-  const adminColumns = ["ID", "Nama", "Email", "Status"];
-  const adminData = [
-    {
-      id: 1,
-      nama: "Admin Setiawan",
-      email: "admin.setiawan@example.com",
-      status: "Aktif",
-    },
-    {
-      id: 2,
-      nama: "Admin Andi",
-      email: "admin.andi@example.com",
-      status: "Nonaktif",
-    },
-    {
-      id: 3,
-      nama: "Admin Sari",
-      email: "admin.sari@example.com",
-      status: "Aktif",
-    },
+  const columns = [
+    { title: "ID", dataIndex: "id" },
+    { title: "Nama Admin", dataIndex: "name" },
+    { title: "Email", dataIndex: "email" },
+    { title: "No Hp", dataIndex: "phone" },
   ];
 
-  const handleDelete = (admin) => {
-    alert(`Hapus admin: ${admin.nama}`);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const [userData] = await Promise.all([getUsers()]);
+      const adminOnly = userData.filter((user) => user.role === "admin");
+      setUsers(adminOnly);
+    };
 
+    fetchData();
+  }, []);
+  
   return (
     <div className="d-flex" style={{ minHeight: "100vh" }}>
       <Sidebar />
@@ -43,31 +32,8 @@ export default function DaftarAdmin() {
         <Topbar />
         <div className="p-4">
           <div style={{ marginTop: "-20px" }}>
-            <TableCard
-              title="Daftar Admin"
-              columns={adminColumns}
-              data={adminData}
-              renderAction={(admin) => (
-                <button
-                  className="btn btn-sm btn-danger"
-                  onClick={() => handleDelete(admin)}
-                  title="Hapus"
-                >
-                  <FaTrash />
-                </button>
-              )}
-            />
+            <TableCard title="Daftar Admin" columns={columns} data={users} />
           </div>
-
-          {showModal && (
-            <DetailModal
-              user={selectedAdmin}
-              onClose={() => {
-                setShowModal(false);
-                setSelectedAdmin(null);
-              }}
-            />
-          )}
         </div>
       </div>
     </div>

@@ -10,11 +10,23 @@ import {
   FaChevronDown,
   FaChevronUp,
 } from "react-icons/fa";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { logout } from "../../../_services/auth";
 
 export default function Sidebar() {
   const [openKelola, setOpenKelola] = useState(false);
   const [openTransaksi, setOpenTransaksi] = useState(false);
+
+  const navigate = useNavigate();
+  const token = localStorage.getItem("accessToken");
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+  const handleLogout = async () => {
+    if (token) {
+      await logout({ token, userInfo });
+    }
+    navigate("/login");
+  };
 
   return (
     <div
@@ -200,6 +212,8 @@ export default function Sidebar() {
       <div
         className="mt-auto d-flex align-items-center gap-2"
         style={{ cursor: "pointer" }}
+        to={"/"}
+        onClick={handleLogout}
       >
         <FaSignOutAlt /> Keluar
       </div>
