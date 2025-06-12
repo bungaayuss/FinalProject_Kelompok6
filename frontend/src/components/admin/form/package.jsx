@@ -18,7 +18,6 @@ export default function FormTambahPackageEvent({
 
   useEffect(() => {
     if (initialData) {
-      // Harga diubah ke string supaya mudah diinput
       setFormData({
         kategori: initialData.kategori || "",
         nama: initialData.nama || "",
@@ -49,13 +48,11 @@ export default function FormTambahPackageEvent({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validasi harga sebagai number positif
     if (isNaN(formData.harga) || Number(formData.harga) < 0) {
       alert("Harga harus berupa angka positif");
       return;
     }
 
-    // Kirim data dengan harga sebagai number
     onSubmit({
       kategori: formData.kategori,
       nama: formData.nama,

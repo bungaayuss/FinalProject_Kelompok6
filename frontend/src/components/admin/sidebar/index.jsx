@@ -34,7 +34,7 @@ export default function Sidebar() {
     >
       <h4 className="mb-4 d-flex align-items-center justify-content-start gap-2">
         <img
-          src="https://i.pravatar.cc/40"
+          src="/logo.png"
           alt="Profile"
           style={{
             width: "40px",

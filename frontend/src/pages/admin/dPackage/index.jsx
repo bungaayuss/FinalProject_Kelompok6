@@ -32,14 +32,12 @@ export default function DaftarPackageEvent() {
 
   const handleTambahPackage = (packageBaru) => {
     if (packageEdit) {
-      // Edit mode
       const updatedData = packageData.map((p) =>
         p.id === packageEdit.id ? { ...p, ...packageBaru } : p
       );
       setPackageData(updatedData);
       setPackageEdit(null);
     } else {
-      // Tambah mode
       const idBaru = packageData.length + 1;
       setPackageData([...packageData, { id: idBaru, ...packageBaru }]);
     }
