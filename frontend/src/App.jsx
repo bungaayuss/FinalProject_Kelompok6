@@ -15,7 +15,7 @@ import Transaction from "./components/user/Transaction";
 import DashboardLayout from "./components/user/dashboard/dashboardLayout";
 import Notifikasi from "./components/user/dashboard/Notifikasi";
 import Profile from "./components/user/dashboard/Profile";
-// import Transaksi from "./components/user/dashboard/Transaksi";
+import Transaksi from './components/user/dashboard/transaksi';
 
 // Admin
 import Dashboard from "./pages/admin/dashboard";

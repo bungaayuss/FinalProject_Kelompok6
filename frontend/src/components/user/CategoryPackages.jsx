@@ -58,7 +58,7 @@ export default function CategoryPackage() {
     <section className="category-package-section">
       <div className="container">
         <div className="category-header">
-          <button className="back-btn-small" onClick={() => navigate("/services")}>
+          <button className="back-btn-small" onClick={() => navigate("/service")}>
             ← Kembali
           </button>
           <h2 className="category-title">Paket {categoryName}</h2>
