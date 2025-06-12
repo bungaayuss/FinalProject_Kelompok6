@@ -3,11 +3,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import Home from "./pages/home";
-import Contact from "./pages/contact";
-import About from "./pages/about";
-import Service from "./pages/service";
-import Login from "./pages/login";
+import Home from "./pages/user/home";
+import Contact from "./pages/user/contact";
+import About from "./pages/user/about";
+import Service from "./components/user/servives";
 import CategoryPackages from "./components/user/CategoryPackages";
 
 import Dashboard from "./pages/admin/dashboard";
@@ -18,6 +17,8 @@ import DPackage from "./pages/admin/dPackage";
 
 import UserLayout from "./layout/user";
 import AdminLayout from "./layout/admin";
+import Login from "./components/user/auth/login";
+import Register from "./components/user/auth/register";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -83,6 +84,24 @@ function App() {
 
         {/* USER ROUTES */}
         <Route
+          path="/login"
+          element={
+            <UserLayout>
+              <Login />
+            </UserLayout>
+          }
+        />
+
+        <Route
+          path="/register"
+          element={
+            <UserLayout>
+              <Register />
+            </UserLayout>
+          }
+        />
+
+        <Route
           path="/"
           element={
             <UserLayout
@@ -139,18 +158,6 @@ function App() {
               onLogout={handleLogout}
             >
               <Service />
-            </UserLayout>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <UserLayout
-              isLoggedIn={isLoggedIn}
-              username={username}
-              onLogout={handleLogout}
-            >
-              <Login setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} />
             </UserLayout>
           }
         />
