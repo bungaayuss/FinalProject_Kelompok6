@@ -16,9 +16,8 @@ import DAdmin from "./pages/admin/dAdmin";
 import DKategori from "./pages/admin/dKategori";
 import DPackage from "./pages/admin/dPackage";
 import DTransaksi from "./pages/admin/dTransaksi";
-import DKonfirmasi from "./pages/admin/dLaporan";
-
-
+import DLaporan from "./pages/admin/dLaporan";
+import DEvent from "./pages/admin/event";
 
 import UserLayout from "./layout/user";
 import AdminLayout from "./layout/admin";
@@ -93,10 +92,18 @@ function App() {
           }
         />
         <Route
-          path="/admin/transaksi"
+          path="/admin/laporan"
           element={
             <AdminLayout>
-              <DKonfirmasi />
+              <DLaporan />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/admin/event"
+          element={
+            <AdminLayout>
+              <DEvent />
             </AdminLayout>
           }
         />

@@ -182,7 +182,10 @@ export default function Sidebar() {
 
         <li className="nav-item d-flex align-items-center gap-2">
           <FaCalendarAlt />
-          <Link to="/admin/event" className="text-white text-decoration-none">
+          <Link 
+            to="/admin/event" 
+            className="text-white text-decoration-none"
+          >
             Event
           </Link>
         </li>
