@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "../../../styles/header.css";
+import "./../../../styles/header.css";
 
 export default function Header() {
   return (
@@ -12,7 +12,7 @@ export default function Header() {
           style={{ color: "#014AB0" }}
         >
           <img
-            src="/Event.png"
+            src="/logo.png"
             alt="Logo"
             style={{ height: "60px", marginRight: "6px" }}
           />

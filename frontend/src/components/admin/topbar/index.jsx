@@ -1,30 +1,32 @@
-// components/Topbar.jsx
-import React from "react";
+import { FaBell, FaSearch } from "react-icons/fa";
 
-const Topbar = ({ onToggleSidebar }) => {
+export default function Topbar() {
   return (
-    <div className="topbar d-flex justify-content-between align-items-center px-4">
-      <button className="btn btn-outline-primary" onClick={onToggleSidebar}>
-        <i className="bi bi-list fs-4"></i>
-      </button>
+    <div
+      className="d-flex justify-content-between align-items-center p-3 bg-white shadow-sm"
+      style={{
+        marginTop: "20px",
+        marginRight: "20px",
+        marginLeft: "20px",
+        borderRadius: "15px",
+      }}
+    >
       <div className="input-group w-50">
         <input type="text" className="form-control" placeholder="Search here" />
         <span className="input-group-text">
-          <i className="bi bi-search"></i>
+          <FaSearch />
         </span>
       </div>
       <div className="d-flex align-items-center gap-3">
-        <i className="bi bi-bell-fill text-dark fs-5 position-relative">
-          <span className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
-        </i>
+        <FaBell />
         <img
-          src="https://via.placeholder.com/40"
+          src="https://nolae.eu/cdn/shop/articles/jake-enhypen-profil-873307.jpg?v=1722887800&width=1920"
           className="rounded-circle"
           alt="Profile"
+          width="40"
+          height="40"
         />
       </div>
     </div>
   );
-};
-
-export default Topbar;
+}

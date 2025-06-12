@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class PackageController extends Controller
 {
     public function index(){
-        $packages = Package::all();
+        $packages = Package::with('category')->get();
 
         if ($packages->isEmpty()){
             return response()->json([
@@ -52,7 +52,7 @@ class PackageController extends Controller
         $package = Package::create([
             'name' => $request->name,
             'description' => $request->description,
-            'image' => $request->image,
+            'image' => $image->hashName(),
             'price' => $request->price,
             'categories_id' => $request->categories_id
         ]);

@@ -23,23 +23,24 @@ time, mark, audio, video {
 	font: inherit;
 	vertical-align: baseline;
 }
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
+
+/* Custom Body Background */
 body {
-	line-height: 1;
-	overflow-x: hidden;
-	margin: 0;
-	display: flex;
-	place-items: center;
-	min-width: 320px;
-	min-height: 100vh;
+	background-color: #f8f9fa !important;
 }
+
+/* List style reset */
 ol, ul {
 	list-style: none;
 }
+
+/* Blockquote and quote reset */
 blockquote, q {
 	quotes: none;
 }
@@ -48,6 +49,8 @@ q:before, q:after {
 	content: '';
 	content: none;
 }
+
+/* Table reset */
 table {
 	border-collapse: collapse;
 	border-spacing: 0;

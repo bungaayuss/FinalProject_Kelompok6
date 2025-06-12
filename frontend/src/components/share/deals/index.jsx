@@ -1,33 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../../../styles/deals.css";
+// import { useNavigate } from "react-router";
+import { getPackages } from "../../../_services/packages";
 
 export default function Deals() {
-  const packages = [
-    {
-      name: "Paket Wedding Modern Glam",
-      description: ["Venue indoor", "Dekorasi glamor", "Dokumentasi full day"],
-      image:
-        "https://dwpinsider.com/wp-content/uploads/2021/08/jjUntitled-1.jpg",
-      price: 12000000,
-      categories_id: 1,
-    },
-    {
-      name: "Paket Ulang Tahun Aesthetic",
-      description: ["Dekorasi ala Pinterest", "Neon Sign"],
-      image:
-        "https://media-public.dekoruma.com/article/2025/04/Dekorasi-Ulang-Tahun-FIMG.webp",
-      price: 3000000,
-      categories_id: 2,
-    },
-    {
-      name: "Paket Graduation Garden Party",
-      description: ["Outdoor setup", "Foto Booth", "Snack Table"],
-      image:
-        "https://www.lulus.com/blog/wp-content/uploads/2021/04/Grad-Experience-Hero1.jpg",
-      price: 5500000,
-      categories_id: 4,
-    },
-  ];
+  // const navigate = useNavigate();
+
+  const [packages, setPackages] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [packagesData] = await Promise.all([getPackages()]);
+      setPackages(packagesData.slice(0, 3));
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <section className="container my-5 deals-section">
@@ -45,11 +33,16 @@ export default function Deals() {
               {pkg.image && <img src={pkg.image} alt={pkg.name} />}
               <div className="card-body d-flex flex-column">
                 <h5 className="card-title">{pkg.name}</h5>
-                <ul>
-                  {pkg.description.map((item, idx) => (
-                    <li key={idx}>{item}</li>
-                  ))}
-                </ul>
+                {Array.isArray(pkg.description) ? (
+                  <ul>
+                    {pkg.description.map((item, idx) => (
+                      <li key={idx}>{item}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>{pkg.description}</p> // fallback kalau bukan array
+                )}
+
                 <div className="price">
                   Rp {pkg.price.toLocaleString("id-ID")}
                 </div>
