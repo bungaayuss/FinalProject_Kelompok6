@@ -1,4 +1,3 @@
-// dari sini
 import React, { useState } from "react";
 import {
   FaHome,
@@ -194,7 +193,10 @@ export default function Sidebar() {
 
         <li className="nav-item d-flex align-items-center gap-2">
           <FaCalendarAlt />
-          <Link to="/admin/event" className="text-white text-decoration-none">
+          <Link 
+            to="/admin/event" 
+            className="text-white text-decoration-none"
+          >
             Event
           </Link>
         </li>
@@ -212,7 +214,6 @@ export default function Sidebar() {
       <div
         className="mt-auto d-flex align-items-center gap-2"
         style={{ cursor: "pointer" }}
-        to={"/"}
         onClick={handleLogout}
       >
         <FaSignOutAlt /> Keluar

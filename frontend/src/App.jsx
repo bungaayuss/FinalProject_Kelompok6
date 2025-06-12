@@ -1,20 +1,32 @@
-// import "./App.css";
-// import "./index.css";
+import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+// Halaman user
 import Home from "./pages/user/home";
 import Contact from "./pages/user/contact";
 import About from "./pages/user/about";
-import Service from "./components/user/servives";
-import CategoryPackages from "./components/user/CategoryPackages";
+import Services from "./components/user/servives";
+import CategoryPackage from "./components/user/CategoryPackages";
+import Transaction from "./components/user/Transaction";
 
+// Dashboard user
+import DashboardLayout from "./components/user/dashboard/dashboardLayout";
+import Notifikasi from "./components/user/dashboard/Notifikasi";
+import Profile from "./components/user/dashboard/Profile";
+import Transaksi from "./components/user/dashboard/transaksi";
+
+// Admin
 import Dashboard from "./pages/admin/dashboard";
 import DUser from "./pages/admin/dUser";
 import DAdmin from "./pages/admin/dAdmin";
 import DKategori from "./pages/admin/dKategori";
 import DPackage from "./pages/admin/dPackage";
+import DTransaksi from "./pages/admin/dTransaksi";
+import DLaporan from "./pages/admin/dLaporan";
+import DEvent from "./pages/admin/event";
 
+// Layout
 import UserLayout from "./layout/user";
 import AdminLayout from "./layout/admin";
 import Login from "./components/user/auth/login";
@@ -35,12 +47,14 @@ function App() {
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUsername("");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("username");
   };
 
   return (
     <BrowserRouter>
       <Routes>
-        {/* ADMIN ROUTES */}
+        {/* Admin Routes */}
         <Route
           path="/admin/dashboard"
           element={
@@ -81,8 +95,32 @@ function App() {
             </AdminLayout>
           }
         />
+        <Route
+          path="/admin/transaksi"
+          element={
+            <AdminLayout>
+              <DTransaksi />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/admin/laporan"
+          element={
+            <AdminLayout>
+              <DLaporan />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/admin/event"
+          element={
+            <AdminLayout>
+              <DEvent />
+            </AdminLayout>
+          }
+        />
 
-        {/* USER ROUTES */}
+        {/* User Routes */}
         <Route
           path="/login"
           element={
@@ -157,7 +195,7 @@ function App() {
               username={username}
               onLogout={handleLogout}
             >
-              <Service />
+              <Services />
             </UserLayout>
           }
         />
@@ -169,10 +207,41 @@ function App() {
               username={username}
               onLogout={handleLogout}
             >
-              <CategoryPackages />
+              <CategoryPackage />
             </UserLayout>
           }
         />
+        <Route
+          path="/transaksi"
+          element={
+            <UserLayout
+              isLoggedIn={isLoggedIn}
+              username={username}
+              onLogout={handleLogout}
+            >
+              <Transaction />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <UserLayout
+              isLoggedIn={isLoggedIn}
+              username={username}
+              onLogout={handleLogout}
+            >
+              <Login setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} />
+            </UserLayout>
+          }
+        />
+
+        {/* User Dashboard Routes */}
+        <Route path="/dashboard/*" element={<DashboardLayout />}>
+          <Route path="profile" element={<Profile />} />
+          <Route path="transaksi" element={<Transaksi />} />
+          <Route path="notifikasi" element={<Notifikasi />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
