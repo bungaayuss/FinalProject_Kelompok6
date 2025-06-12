@@ -1,7 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./../../../styles/header.css";
+import { logout } from "../../../_services/auth";
 
 export default function Header() {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("accessToken");
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+  const handleLogout = async () => {
+    if (token) {
+      await logout({token});
+      localStorage.removeItem("userInfo");
+    }
+    navigate("/login")
+  }
+
   return (
     <header className="navbar navbar-expand-lg bg-white fixed-top border-bottom shadow-sm">
       <div className="container-fluid px-4">
@@ -48,29 +61,55 @@ export default function Header() {
           </ul>
 
           {/* Register & Login */}
-          <Link
-            to="/login"
-            className="btn"
-            style={{
-              backgroundColor: "#014AB0",
-              color: "#fff",
-              marginRight: "10px",
-              marginLeft: "10px",
-            }}
-          >
-            Login
-          </Link>
-          <Link
-            to="/register"
-            className="btn me-2"
-            style={{
-              border: "2px solid #014AB0",
-              color: "#014AB0",
-              backgroundColor: "transparent",
-            }}
-          >
-            Register
-          </Link>
+          {token && userInfo ? (
+            <>
+              <Link
+              to="/"
+              className="btn"
+              style={{
+                backgroundColor: "#014AB0",
+                color: "#fff",
+                marginRight: "10px",
+                marginLeft: "10px",
+              }}
+              >
+                {userInfo.name}
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="btn btn-danger fw-semibold px-4"
+              >
+                Logout
+              </button>
+            </>
+          ):(
+
+          <>
+            <Link
+              to="/login"
+              className="btn"
+              style={{
+                backgroundColor: "#014AB0",
+                color: "#fff",
+                marginRight: "10px",
+                marginLeft: "10px",
+              }}
+            >
+              Login
+            </Link>
+            <Link
+              to="/register"
+              className="btn me-2"
+              style={{
+                border: "2px solid #014AB0",
+                color: "#014AB0",
+                backgroundColor: "transparent",
+              }}
+            >
+              Register
+            </Link>
+          </>
+          )}
         </div>
       </div>
     </header>

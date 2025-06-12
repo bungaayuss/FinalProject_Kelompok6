@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import Home from "./pages/user/home";
 import Contact from "./pages/user/contact";
 import About from "./pages/user/about";
-import Login from "./pages/user/login";
 import Services from "./components/user/servives";
 import CategoryPackage from "./components/user/CategoryPackages";
 import Transaction from "./components/user/Transaction";
@@ -30,6 +29,8 @@ import DEvent from "./pages/admin/event";
 // Layout
 import UserLayout from "./layout/user";
 import AdminLayout from "./layout/admin";
+import Login from "./components/user/auth/login";
+import Register from "./components/user/auth/register";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -120,6 +121,24 @@ function App() {
         />
 
         {/* User Routes */}
+        <Route
+          path="/login"
+          element={
+            <UserLayout>
+              <Login />
+            </UserLayout>
+          }
+        />
+
+        <Route
+          path="/register"
+          element={
+            <UserLayout>
+              <Register />
+            </UserLayout>
+          }
+        />
+
         <Route
           path="/"
           element={
