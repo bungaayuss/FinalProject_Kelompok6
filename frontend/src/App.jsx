@@ -1,21 +1,30 @@
-// import "./App.css";
-// import "./index.css";
+import './App.css';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+// Halaman user
 import Home from "./pages/home";
 import Contact from "./pages/contact";
 import About from "./pages/about";
-import Service from "./pages/service";
 import Login from "./pages/login";
-import CategoryPackages from "./components/user/CategoryPackages";
+import Services from "./components/share/servives";
+import CategoryPackage from "./components/user/CategoryPackages";
+import Transaction from "./components/user/Transaction";
 
+// Dashboard user
+import DashboardLayout from "./components/user/dashboard/dashboardLayout";
+import Notifikasi from "./components/user/dashboard/Notifikasi";
+import Profile from "./components/user/dashboard/Profile";
+// import Transaksi from "./components/user/dashboard/Transaksi";
+
+// Admin
 import Dashboard from "./pages/admin/dashboard";
 import DUser from "./pages/admin/dUser";
 import DAdmin from "./pages/admin/dAdmin";
 import DKategori from "./pages/admin/dKategori";
 import DPackage from "./pages/admin/dPackage";
 
+// Layout
 import UserLayout from "./layout/user";
 import AdminLayout from "./layout/admin";
 
@@ -34,12 +43,14 @@ function App() {
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUsername("");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("username");
   };
 
   return (
     <BrowserRouter>
       <Routes>
-        {/* ADMIN ROUTES */}
+        {/* Admin Routes */}
         <Route
           path="/admin/dashboard"
           element={
@@ -81,15 +92,11 @@ function App() {
           }
         />
 
-        {/* USER ROUTES */}
+        {/* User Routes */}
         <Route
           path="/"
           element={
-            <UserLayout
-              isLoggedIn={isLoggedIn}
-              username={username}
-              onLogout={handleLogout}
-            >
+            <UserLayout isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}>
               <Home />
             </UserLayout>
           }
@@ -97,11 +104,7 @@ function App() {
         <Route
           path="/home"
           element={
-            <UserLayout
-              isLoggedIn={isLoggedIn}
-              username={username}
-              onLogout={handleLogout}
-            >
+            <UserLayout isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}>
               <Home />
             </UserLayout>
           }
@@ -109,11 +112,7 @@ function App() {
         <Route
           path="/contact"
           element={
-            <UserLayout
-              isLoggedIn={isLoggedIn}
-              username={username}
-              onLogout={handleLogout}
-            >
+            <UserLayout isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}>
               <Contact />
             </UserLayout>
           }
@@ -121,11 +120,7 @@ function App() {
         <Route
           path="/about"
           element={
-            <UserLayout
-              isLoggedIn={isLoggedIn}
-              username={username}
-              onLogout={handleLogout}
-            >
+            <UserLayout isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}>
               <About />
             </UserLayout>
           }
@@ -133,39 +128,42 @@ function App() {
         <Route
           path="/service"
           element={
-            <UserLayout
-              isLoggedIn={isLoggedIn}
-              username={username}
-              onLogout={handleLogout}
-            >
-              <Service />
-            </UserLayout>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <UserLayout
-              isLoggedIn={isLoggedIn}
-              username={username}
-              onLogout={handleLogout}
-            >
-              <Login setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} />
+            <UserLayout isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}>
+              <Services />
             </UserLayout>
           }
         />
         <Route
           path="/kategori/:id"
           element={
-            <UserLayout
-              isLoggedIn={isLoggedIn}
-              username={username}
-              onLogout={handleLogout}
-            >
-              <CategoryPackages />
+            <UserLayout isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}>
+              <CategoryPackage />
             </UserLayout>
           }
         />
+        <Route
+          path="/transaksi"
+          element={
+            <UserLayout isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}>
+              <Transaction />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <UserLayout isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}>
+              <Login setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} />
+            </UserLayout>
+          }
+        />
+
+        {/* User Dashboard Routes */}
+        <Route path="/dashboard/*" element={<DashboardLayout />}>
+          <Route path="profile" element={<Profile />} />
+          <Route path="transaksi" element={<Transaksi />} />
+          <Route path="notifikasi" element={<Notifikasi />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
