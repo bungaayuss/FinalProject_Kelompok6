@@ -1,13 +1,13 @@
-import './App.css';
+import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 // Halaman user
-import Home from "./pages/home";
-import Contact from "./pages/contact";
-import About from "./pages/about";
-import Login from "./pages/login";
-import Services from "./components/share/servives";
+import Home from "./pages/user/home";
+import Contact from "./pages/user/contact";
+import About from "./pages/user/about";
+import Login from "./pages/user/login";
+import Services from "./components/user/servives";
 import CategoryPackage from "./components/user/CategoryPackages";
 import Transaction from "./components/user/Transaction";
 
@@ -15,7 +15,7 @@ import Transaction from "./components/user/Transaction";
 import DashboardLayout from "./components/user/dashboard/dashboardLayout";
 import Notifikasi from "./components/user/dashboard/Notifikasi";
 import Profile from "./components/user/dashboard/Profile";
-// import Transaksi from "./components/user/dashboard/Transaksi";
+import Transaksi from "./components/user/dashboard/transaksi";
 
 // Admin
 import Dashboard from "./pages/admin/dashboard";
@@ -23,6 +23,9 @@ import DUser from "./pages/admin/dUser";
 import DAdmin from "./pages/admin/dAdmin";
 import DKategori from "./pages/admin/dKategori";
 import DPackage from "./pages/admin/dPackage";
+import DTransaksi from "./pages/admin/dTransaksi";
+import DLaporan from "./pages/admin/dLaporan";
+import DEvent from "./pages/admin/event";
 
 // Layout
 import UserLayout from "./layout/user";
@@ -91,12 +94,40 @@ function App() {
             </AdminLayout>
           }
         />
+        <Route
+          path="/admin/transaksi"
+          element={
+            <AdminLayout>
+              <DTransaksi />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/admin/laporan"
+          element={
+            <AdminLayout>
+              <DLaporan />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/admin/event"
+          element={
+            <AdminLayout>
+              <DEvent />
+            </AdminLayout>
+          }
+        />
 
         {/* User Routes */}
         <Route
           path="/"
           element={
-            <UserLayout isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}>
+            <UserLayout
+              isLoggedIn={isLoggedIn}
+              username={username}
+              onLogout={handleLogout}
+            >
               <Home />
             </UserLayout>
           }
@@ -104,7 +135,11 @@ function App() {
         <Route
           path="/home"
           element={
-            <UserLayout isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}>
+            <UserLayout
+              isLoggedIn={isLoggedIn}
+              username={username}
+              onLogout={handleLogout}
+            >
               <Home />
             </UserLayout>
           }
@@ -112,7 +147,11 @@ function App() {
         <Route
           path="/contact"
           element={
-            <UserLayout isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}>
+            <UserLayout
+              isLoggedIn={isLoggedIn}
+              username={username}
+              onLogout={handleLogout}
+            >
               <Contact />
             </UserLayout>
           }
@@ -120,7 +159,11 @@ function App() {
         <Route
           path="/about"
           element={
-            <UserLayout isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}>
+            <UserLayout
+              isLoggedIn={isLoggedIn}
+              username={username}
+              onLogout={handleLogout}
+            >
               <About />
             </UserLayout>
           }
@@ -128,7 +171,11 @@ function App() {
         <Route
           path="/service"
           element={
-            <UserLayout isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}>
+            <UserLayout
+              isLoggedIn={isLoggedIn}
+              username={username}
+              onLogout={handleLogout}
+            >
               <Services />
             </UserLayout>
           }
@@ -136,7 +183,11 @@ function App() {
         <Route
           path="/kategori/:id"
           element={
-            <UserLayout isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}>
+            <UserLayout
+              isLoggedIn={isLoggedIn}
+              username={username}
+              onLogout={handleLogout}
+            >
               <CategoryPackage />
             </UserLayout>
           }
@@ -144,7 +195,11 @@ function App() {
         <Route
           path="/transaksi"
           element={
-            <UserLayout isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}>
+            <UserLayout
+              isLoggedIn={isLoggedIn}
+              username={username}
+              onLogout={handleLogout}
+            >
               <Transaction />
             </UserLayout>
           }
@@ -152,7 +207,11 @@ function App() {
         <Route
           path="/login"
           element={
-            <UserLayout isLoggedIn={isLoggedIn} username={username} onLogout={handleLogout}>
+            <UserLayout
+              isLoggedIn={isLoggedIn}
+              username={username}
+              onLogout={handleLogout}
+            >
               <Login setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} />
             </UserLayout>
           }

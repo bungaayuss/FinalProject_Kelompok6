@@ -62,7 +62,7 @@ export default function DaftarPackageEvent() {
       } catch (error) {
         console.error("Gagal mengambil data:", error);
         alert("Gagal mengambil data packages dan categories.");
-      } 
+      }
     };
 
     fetchData();
