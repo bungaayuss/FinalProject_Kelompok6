@@ -1,118 +1,63 @@
-"use client"
+import { useState, useEffect, useMemo } from "react";
+import "../../../styles/Transaksi.css";
+import { getTransactions } from "../../../_services/transaction";
+import { getPackages } from "../../../_services/packages";
 
-import { useState, useMemo } from "react"
-import "../../../styles/Transaksi.css"
+export default function Transaksi() {
+  const [filterStatus, setFilterStatus] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [transactions, setTransactions] = useState([])
+  const [packages, setPackages] = useState([]);
 
-const Transaksi = () => {
-  const [filterStatus, setFilterStatus] = useState("")
-  const [searchTerm, setSearchTerm] = useState("")
 
-  const allTransaksi = [
-    {
-      id: "TRX001",
-      tanggal: "15 Januari 2024",
-      namaEvent: "Pernikahan Sarah & John",
-      paket: "Paket Wedding Modern Glam",
-      total: "Rp 12.000.000",
-      status: "Selesai",
-      rating: 5,
-    },
-    {
-      id: "TRX002",
-      tanggal: "14 Januari 2024",
-      namaEvent: "Ulang Tahun Anak",
-      paket: "Paket Ulang Tahun Aesthetic",
-      total: "Rp 3.000.000",
-      status: "Selesai",
-      rating: 4,
-    },
-    {
-      id: "TRX003",
-      tanggal: "13 Januari 2024",
-      namaEvent: "Konser Musik Indie",
-      paket: "Paket Konser Musik Full Package",
-      total: "Rp 15.000.000",
-      status: "Berlangsung",
-      rating: null,
-    },
-    {
-      id: "TRX004",
-      tanggal: "12 Januari 2024",
-      namaEvent: "Wisuda Universitas",
-      paket: "Paket Graduation Garden Party",
-      total: "Rp 5.500.000",
-      status: "Dibatalkan",
-      rating: null,
-    },
-    {
-      id: "TRX005",
-      tanggal: "11 Januari 2024",
-      namaEvent: "Lamaran Romantis",
-      paket: "Paket Engagement Bohemian",
-      total: "Rp 6.000.000",
-      status: "Selesai",
-      rating: 5,
-    },
-    {
-      id: "TRX006",
-      tanggal: "10 Januari 2024",
-      namaEvent: "Pernikahan Outdoor",
-      paket: "Paket Wedding Rustic",
-      total: "Rp 10.000.000",
-      status: "Menunggu Pembayaran",
-      rating: null,
-    },
-    {
-      id: "TRX007",
-      tanggal: "9 Januari 2024",
-      namaEvent: "Corporate Event",
-      paket: "Paket Meeting Professional",
-      total: "Rp 8.000.000",
-      status: "Selesai",
-      rating: 4,
-    },
-    {
-      id: "TRX008",
-      tanggal: "8 Januari 2024",
-      namaEvent: "Baby Shower",
-      paket: "Paket Baby Shower Pink Theme",
-      total: "Rp 4.500.000",
-      status: "Selesai",
-      rating: 5,
-    },
-  ]
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const userId = userInfo?.id;
 
-  // Filter untuk user pembeli (lebih sederhana)
+  useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const [transactionsData, packageData] = await Promise.all([
+            getTransactions(),
+            getPackages(),
+          ]);
+          setTransactions(transactionsData);
+          setPackages(packageData);
+        } catch (error) {
+          console.error("Gagal mengambil data:", error);
+          alert("Gagal mengambil data transactions dan user.");
+        }
+      };
+
+    if (userId) fetchData();
+  }, [userId]);
+
+  const getPackage = (id) => {
+    const found = packages.find((pkg) => pkg.id === id);
+    return found ? found.name : `Paket #${id}`;
+  };
+
   const filteredTransaksi = useMemo(() => {
-    return allTransaksi.filter((item) => {
-      const matchStatus = filterStatus === "" || item.status === filterStatus
-
-      // Pencarian yang lebih komprehensif
-      const searchLower = searchTerm.toLowerCase()
+    return transactions.filter((item) => {
+      const matchStatus = filterStatus === "" || item.status === filterStatus;
+      const searchLower = searchTerm.toLowerCase();
       const matchSearch =
         searchTerm === "" ||
-        item.namaEvent.toLowerCase().includes(searchLower) ||
-        item.id.toLowerCase().includes(searchLower) ||
-        item.paket.toLowerCase().includes(searchLower) ||
-        item.tanggal.toLowerCase().includes(searchLower) ||
-        item.total.toLowerCase().includes(searchLower)
+        item.event_name?.toLowerCase().includes(searchLower) ||
+        item.id.toString().toLowerCase().includes(searchLower) ||
+        item.packages_id?.toString().toLowerCase().includes(searchLower) ||
+        item.event_date?.toLowerCase().includes(searchLower) ||
+        item.total?.toString().toLowerCase().includes(searchLower);
 
-      return matchStatus && matchSearch
-    })
-  }, [filterStatus, searchTerm, allTransaksi])
+      return matchStatus && matchSearch;
+    });
+  }, [transactions, filterStatus, searchTerm]);
 
-  const handleStatusChange = (e) => {
-    setFilterStatus(e.target.value)
-  }
-
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value)
-  }
-
+  const handleStatusChange = (e) => setFilterStatus(e.target.value);
+  const handleSearchChange = (e) => setSearchTerm(e.target.value);
   const clearFilters = () => {
-    setFilterStatus("")
-    setSearchTerm("")
-  }
+    setFilterStatus("");
+    setSearchTerm("");
+  };
 
   const getStatusBadge = (status) => {
     const statusClasses = {
@@ -120,27 +65,34 @@ const Transaksi = () => {
       Berlangsung: "status-ongoing",
       "Menunggu Pembayaran": "status-pending",
       Dibatalkan: "status-cancelled",
-    }
-    return statusClasses[status] || "status-default"
-  }
+      "Waiting verification": "status-pending",
+      Paid: "status-completed",
+    };
+    return statusClasses[status] || "status-default";
+  };
 
-  const displayedTransaksi = filteredTransaksi
+  const displayedTransaksi = filteredTransaksi;
 
   return (
     <div className="transaksi-user-page">
       <div className="transaksi-header">
         <h1 className="transaksi-title">Riwayat Pesanan Saya</h1>
-        <p className="transaksi-subtitle">Lihat semua event yang pernah Anda pesan</p>
+        <p className="transaksi-subtitle">
+          Lihat semua event yang pernah Anda pesan
+        </p>
       </div>
 
       <div className="transaksi-filter-simple">
         <div className="filter-group">
-          <select className="filter-select" value={filterStatus} onChange={handleStatusChange}>
+          <select
+            className="filter-select"
+            value={filterStatus}
+            onChange={handleStatusChange}
+          >
             <option value="">Semua Status</option>
-            <option value="Selesai">Selesai</option>
-            <option value="Berlangsung">Berlangsung</option>
-            <option value="Menunggu Pembayaran">Menunggu Pembayaran</option>
-            <option value="Dibatalkan">Dibatalkan</option>
+            <option value="Paid">Selesai</option>
+            <option value="Waiting verification">Menunggu verifikasi</option>
+            <option value="Rejected">Dibatalkan</option>
           </select>
         </div>
         <div className="filter-group">
@@ -159,33 +111,43 @@ const Transaksi = () => {
         )}
       </div>
 
-      <div className={`transaksi-grid`}>
+      <div className="transaksi-grid">
         {displayedTransaksi.length > 0 ? (
           displayedTransaksi.map((item) => (
             <div key={item.id} className="transaksi-card">
               <div className="card-header">
                 <div className="event-info">
-                  <h3 className="event-name">{item.namaEvent}</h3>
-                  <p className="event-date">{item.tanggal}</p>
+                  <h3 className="event-name">{item.event_name}</h3>
+                  <p className="event-date">{item.event_date}</p>
                 </div>
-                <span className={`status-badge ${getStatusBadge(item.status)}`}>{item.status}</span>
+                <span className={`status-badge ${getStatusBadge(item.status)}`}>
+                  {item.status}
+                </span>
               </div>
 
               <div className="card-body">
                 <div className="package-info">
-                  <p className="package-name">{item.paket}</p>
+                  <p className="package-name">
+                    {getPackage(item.packages_id)}
+                  </p>
                   <p className="order-id">ID Pesanan: {item.id}</p>
                 </div>
 
                 <div className="price-rating">
-                  <div className="price">{item.total}</div>
+                  <div className="price">
+                    Rp {Number(item.total).toLocaleString()}
+                  </div>
                 </div>
               </div>
 
               <div className="card-actions">
-                {item.status === "Menunggu Pembayaran" && <button className="btn-pay">Bayar Sekarang</button>}
+                {item.status === "Menunggu Pembayaran" && (
+                  <button className="btn-pay">Bayar Sekarang</button>
+                )}
                 <button className="btn-detail">Lihat Detail</button>
-                {item.status === "Selesai" && <button className="btn-reorder">Pesan Lagi</button>}
+                {(item.status === "Selesai" || item.status === "Paid") && (
+                  <button className="btn-reorder">Pesan Lagi</button>
+                )}
               </div>
             </div>
           ))
@@ -193,7 +155,9 @@ const Transaksi = () => {
           <div className="empty-state">
             <div className="empty-icon">📋</div>
             <h3>Belum Ada Pesanan</h3>
-            <p>Anda belum memiliki riwayat pesanan yang sesuai dengan pencarian</p>
+            <p>
+              Anda belum memiliki riwayat pesanan yang sesuai dengan pencarian
+            </p>
             <button className="btn-browse" onClick={clearFilters}>
               Lihat Semua Pesanan
             </button>
@@ -201,30 +165,38 @@ const Transaksi = () => {
         )}
       </div>
 
-      {/* Summary untuk user */}
       <div className="user-summary">
         <div className="summary-card">
           <h3>Ringkasan Pesanan Anda</h3>
           <div className="summary-stats">
             <div className="stat-item">
-              <span className="stat-number">{filteredTransaksi.filter((t) => t.status === "Selesai").length}</span>
+              <span className="stat-number">
+                {filteredTransaksi.filter((t) => t.status === "Paid").length}
+              </span>
               <span className="stat-label">Event Selesai</span>
             </div>
             <div className="stat-item">
-              <span className="stat-number">{filteredTransaksi.filter((t) => t.status === "Berlangsung").length}</span>
-              <span className="stat-label">Sedang Berlangsung</span>
+              <span className="stat-number">
+                {
+                  filteredTransaksi.filter(
+                    (t) => t.status === "Waiting verification"
+                  ).length
+                }
+              </span>
+              <span className="stat-label">Menunggu Verifikasi</span>
             </div>
             <div className="stat-item">
               <span className="stat-number">
-                {filteredTransaksi.filter((t) => t.status === "Menunggu Pembayaran").length}
+                {
+                  filteredTransaksi.filter((t) => t.status === "Rejected")
+                    .length
+                }
               </span>
-              <span className="stat-label">Menunggu Pembayaran</span>
+              <span className="stat-label">Dibatalkan</span>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
-
-export default Transaksi

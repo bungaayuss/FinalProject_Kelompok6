@@ -1,170 +1,137 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import format from "date-fns/format";
 import parse from "date-fns/parse";
 import startOfWeek from "date-fns/startOfWeek";
 import getDay from "date-fns/getDay";
-import "react-big-calendar/lib/css/react-big-calendar.css";
 import { id } from "date-fns/locale";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
 
-const locales = {
-  "id-ID": id,
-};
+import Sidebar from "../../../components/admin/sidebar";
+import { getTransactions } from "../../../_services/transaction";
 
+const locales = { id };
 const localizer = dateFnsLocalizer({
   format,
   parse,
-  startOfWeek: () => startOfWeek(new Date(), { weekStartsOn: 1 }),
+  startOfWeek,
   getDay,
   locales,
 });
 
-const EventCalendar = () => {
-  const [events, setEvents] = useState([
-    {
-      title: "Festival Musik Indie",
-      start: new Date("2025-06-15T18:00:00"),
-      end: new Date("2025-06-15T21:00:00"),
-    },
-    {
-      title: "Pernikahan Adat Bali",
-      start: new Date("2025-06-22T10:00:00"),
-      end: new Date("2025-06-22T14:00:00"),
-    },
-  ]);
-
-  const [newEvent, setNewEvent] = useState({
-    title: "",
-    start: "",
-    end: "",
-  });
-
+export default function EventCalendar() {
+  const [events, setEvents] = useState([]);
+  const [view, setView] = useState("month");
+  const [date, setDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  const handleAddEvent = (e) => {
-    e.preventDefault();
-    const newEv = {
-      title: newEvent.title,
-      start: new Date(newEvent.start),
-      end: new Date(newEvent.end),
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const transactionsData = await getTransactions();
+
+        const kalenderEvent = transactionsData
+          .filter((item) => item.status === "Paid")
+          .map((item) => {
+            const start = new Date(`${item.event_date}T${item.event_time}`);
+            const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+
+            return {
+              title: item.event_name,
+              start,
+              end,
+              guest: item.guest_total,
+              location: item.location,
+            };
+          });
+
+        setEvents(kalenderEvent);
+      } catch (error) {
+        console.error("Gagal mengambil data:", error);
+        alert("Gagal mengambil data transactions.");
+      }
     };
-    setEvents([...events, newEv]);
-    setNewEvent({ title: "", start: "", end: "" });
-  };
 
-  const handleDeleteEvent = () => {
-    setEvents(events.filter((event) => event !== selectedEvent));
-    setSelectedEvent(null);
-  };
+    fetchData();
+  }, []);
 
-  const handleEditEvent = () => {
-    setNewEvent({
-      title: selectedEvent.title,
-      start: format(selectedEvent.start, "yyyy-MM-dd'T'HH:mm"),
-      end: format(selectedEvent.end, "yyyy-MM-dd'T'HH:mm"),
-    });
-    setEvents(events.filter((event) => event !== selectedEvent));
-    setSelectedEvent(null);
+  const handleEventClick = (event) => {
+    setSelectedEvent(event);
+    const modal = new window.bootstrap.Modal(
+      document.getElementById("eventDetailModal")
+    );
+    modal.show();
   };
 
   return (
-    <div className="container mt-4">
-      <h3 className="mb-4 text-primary fw-bold">Kalender Event</h3>
+    <div className="d-flex" style={{ minHeight: "100vh" }}>
+      <Sidebar />
+      <div className="flex-grow-1">
+        <div className="p-4">
+          <h3 className="mb-4 text-primary fw-bold">Kalender Event</h3>
 
-      <form className="mb-4" onSubmit={handleAddEvent}>
-        <div className="row g-3">
-          <div className="col-md-4">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Judul Event"
-              value={newEvent.title}
-              onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
-              required
-            />
-          </div>
-          <div className="col-md-3">
-            <input
-              type="datetime-local"
-              className="form-control"
-              value={newEvent.start}
-              onChange={(e) => setNewEvent({ ...newEvent, start: e.target.value })}
-              required
-            />
-          </div>
-          <div className="col-md-3">
-            <input
-              type="datetime-local"
-              className="form-control"
-              value={newEvent.end}
-              onChange={(e) => setNewEvent({ ...newEvent, end: e.target.value })}
-              required
-            />
-          </div>
-          <div className="col-md-2">
-            <button type="submit" className="btn btn-success w-100">
-              Tambah Event
-            </button>
-          </div>
+          <Calendar
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            style={{ height: 600 }}
+            views={["month", "week", "day", "agenda"]}
+            view={view}
+            onView={(newView) => setView(newView)}
+            date={date}
+            onNavigate={(newDate) => setDate(newDate)}
+            toolbar={true}
+            onSelectEvent={handleEventClick}
+          />
         </div>
-      </form>
+      </div>
 
-      <Calendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: 600 }}
-        onSelectEvent={(event) => setSelectedEvent(event)}
-      />
-
-      {selectedEvent && (
-        <div
-          className="modal d-block"
-          tabIndex="-1"
-          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Detail Event</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => setSelectedEvent(null)}
-                ></button>
-              </div>
-              <div className="modal-body">
-                <p><strong>Judul:</strong> {selectedEvent.title}</p>
-                <p><strong>Mulai:</strong> {format(selectedEvent.start, "PPpp")}</p>
-                <p><strong>Selesai:</strong> {format(selectedEvent.end, "PPpp")}</p>
-              </div>
-              <div className="modal-footer">
-                <button
-                  className="btn btn-warning"
-                  onClick={handleEditEvent}
-                >
-                  Edit
-                </button>
-                <button
-                  className="btn btn-danger"
-                  onClick={handleDeleteEvent}
-                >
-                  Hapus
-                </button>
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => setSelectedEvent(null)}
-                >
-                  Tutup
-                </button>
-              </div>
+      {/* Modal Detail Event */}
+      <div
+        className="modal fade"
+        id="eventDetailModal"
+        tabIndex="-1"
+        aria-labelledby="eventDetailModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered modal-lg">
+          <div className="modal-content">
+            <div className="modal-header bg-primary text-white">
+              <h5 className="modal-title" id="eventDetailModalLabel">
+                Detail Acara
+              </h5>
+              <button
+                type="button"
+                className="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
+            {selectedEvent && (
+              <div className="modal-body">
+                <p>
+                  <strong>Nama Acara:</strong> {selectedEvent.title}
+                </p>
+                <p>
+                  <strong>Waktu:</strong>{" "}
+                  {format(selectedEvent.start, "EEEE, dd MMM yyyy HH:mm", {
+                    locale: id,
+                  })}
+                </p>
+                <p>
+                  <strong>Jumlah Tamu:</strong> {selectedEvent.guest}
+                </p>
+                <p>
+                  <strong>Lokasi:</strong> {selectedEvent.location}
+                </p>
+              </div>
+            )}
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
-};
-
-export default EventCalendar;
+}
