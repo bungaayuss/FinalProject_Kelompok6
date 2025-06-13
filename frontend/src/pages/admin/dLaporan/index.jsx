@@ -103,7 +103,7 @@ export default function LaporanKonfirmasi() {
       alert("Gagal memperbarui status transaksi.");
     }
   };
-  
+
   return (
     <div className="d-flex" style={{ minHeight: "100vh" }}>
       <Sidebar />

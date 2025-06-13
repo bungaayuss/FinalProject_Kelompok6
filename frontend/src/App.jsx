@@ -212,18 +212,6 @@ function App() {
           }
         />
         <Route
-          path="/transaksi"
-          element={
-            <UserLayout
-              isLoggedIn={isLoggedIn}
-              username={username}
-              onLogout={handleLogout}
-            >
-              <Transaction />
-            </UserLayout>
-          }
-        />
-        <Route
           path="/login"
           element={
             <UserLayout
@@ -237,14 +225,14 @@ function App() {
         />
 
         {/* User Dashboard Routes */}
-        <Route path="/dashboard/*" element={<DashboardLayout />}>
+        <Route path="/dashboard" element={<DashboardLayout />}>
           <Route path="profile" element={<Profile />} />
           <Route path="transaksi" element={<Transaksi />} />
           <Route path="notifikasi" element={<Notifikasi />} />
         </Route>
       </Routes>
     </BrowserRouter>
-  );
+  );  
 }
 
 export default App;

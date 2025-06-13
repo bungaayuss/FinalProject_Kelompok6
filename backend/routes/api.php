@@ -43,16 +43,16 @@ Route::middleware('auth:api')->group(function () {
         //1. liat user
         Route::apiResource('users', UserController::class)->only(['index', 'show']);
     
-        // //2. confirmationz
+        //2. confirmationz
         Route::apiResource('confirmations', ConfirmationController::class)->except(['store']);
     
-        // //3. transacton
+        //3. transacton
         Route::apiResource('transactions', TransactionController::class)->except(['store']);
     
-        // //4. packages
+        //4. packages
         Route::apiResource('packages', PackageController::class)->except(['index', 'show']);
     
-        // //5. category
+        //5. category
         Route::apiResource('categories', CategoryController::class)->except(methods: ['index','show']);
     });
 });

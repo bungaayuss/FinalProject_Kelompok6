@@ -1,40 +1,74 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-// import "bootstrap/dist/css/bootstrap.min.css"
-import "../../../styles/Profile.css" // pastikan path benar
+import { useState, useEffect } from "react";
+import "../../../styles/Profile.css";
+import { showUsers, updateUsers } from "../../../_services/user";
 
-const Profile = () => {
+export default function Profile() {
   const [formData, setFormData] = useState({
     nama: "",
     email: "",
     telepon: "",
-    alamat: "",
-  })
+    createdAt: "",
+  });
+
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const userId = userInfo?.id;
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = await showUsers(userId);
+        setFormData({
+          nama: user.name,
+          email: user.email,
+          telepon: user.phone,
+          createdAt: user.created_at,
+        });
+      } catch (error) {
+        console.error("Gagal mengambil data user:", error);
+      }
+    };
+
+    if (userId) fetchUser();
+  }, [userId]);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
-  const handleSave = () => {
-    alert("Data berhasil disimpan")
-  }
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      console.log("File uploaded:", file.name)
+  const handleSave = async () => {
+    try {
+      await updateUsers(userId, {
+        name: formData.nama,
+        email: formData.email,
+        phone: formData.telepon,
+      });
+      alert("Profil berhasil diperbarui!");
+    } catch (error) {
+      console.error("Gagal menyimpan data:", error);
+      alert("Terjadi kesalahan saat menyimpan profil.");
     }
-  }
+  };
 
   return (
     <div className="profil-dashboard-content">
-      <div className="profil-header">
-        <h2 className="profil-main-title">Profil Saya</h2>
-        <p className="profil-subtitle">Kelola informasi pribadi Anda dengan mudah dan aman</p>
+      <div
+        className="profil-header"
+        style={{ padding: "10px 20px", marginBottom: "12px" }}
+      >
+        <h2
+          className="profil-main-title"
+          style={{ fontSize: "18px", marginBottom: "4px" }}
+        >
+          Profil Saya
+        </h2>
+        <p className="profil-subtitle" style={{ fontSize: "14px", margin: 0 }}>
+          Kelola informasi pribadi Anda dengan mudah dan aman
+        </p>
       </div>
 
       <div className="profil-container">
@@ -79,21 +113,12 @@ const Profile = () => {
               />
             </div>
 
-            <div className="profil-form-group">
-              <label className="profil-label">Alamat</label>
-              <textarea
-                className="profil-textarea"
-                name="alamat"
-                rows="4"
-                value={formData.alamat}
-                onChange={handleChange}
-                placeholder="Masukkan alamat lengkap"
-              ></textarea>
-            </div>
-
             <div className="profil-form-actions">
               <button className="profil-btn profil-btn-cancel">Batal</button>
-              <button className="profil-btn profil-btn-save" onClick={handleSave}>
+              <button
+                className="profil-btn profil-btn-save"
+                onClick={handleSave}
+              >
                 Simpan Perubahan
               </button>
             </div>
@@ -105,60 +130,46 @@ const Profile = () => {
           <div className="profil-photo-card">
             <div className="profil-photo-container">
               <img
-                src="https://ui-avatars.com/api/?name=John+Doe&background=2563eb&color=fff&size=200"
+                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                  formData.nama || "User"
+                )}&background=2563eb&color=fff&size=200`}
                 className="profil-photo"
                 alt="Profile"
               />
-              <div className="profil-photo-overlay">
-                <label htmlFor="photo-upload" className="profil-photo-upload-btn">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                    <circle cx="12" cy="13" r="4" />
-                  </svg>
-                </label>
-                <input
-                  id="photo-upload"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  style={{ display: "none" }}
-                />
-              </div>
             </div>
 
             <div className="profil-photo-info">
               <h5 className="profil-photo-title">Foto Profil</h5>
-              <p className="profil-photo-desc">
-                Unggah foto terbaru Anda agar mudah dikenali oleh rekan kerja dan klien
-              </p>
               <div className="profil-photo-requirements">
-                <small>• Format: JPG, PNG, GIF</small>
-                <small>• Ukuran maksimal: 5MB</small>
-                <small>• Resolusi minimal: 400x400px</small>
+                <small>• Tidak perlu diunggah</small>
+                <small>• Gunakan nama lengkap agar lebih rapi</small>
               </div>
             </div>
           </div>
 
-          {/* Info Card Tambahan */}
           <div className="profil-info-card">
             <h6 className="profil-info-title">Status Akun</h6>
             <div className="profil-status-item">
               <span className="profil-status-label">Verifikasi Email</span>
-              <span className="profil-status-badge profil-status-verified">Terverifikasi</span>
-            </div>
-            <div className="profil-status-item">
-              <span className="profil-status-label">Verifikasi Telepon</span>
-              <span className="profil-status-badge profil-status-pending">Pending</span>
+              <span className="profil-status-badge profil-status-verified">
+                Terverifikasi
+              </span>
             </div>
             <div className="profil-status-item">
               <span className="profil-status-label">Bergabung Sejak</span>
-              <span className="profil-status-value">15 Januari 2024</span>
+              <span className="profil-status-value">
+                {formData.createdAt
+                  ? new Intl.DateTimeFormat("id-ID", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    }).format(new Date(formData.createdAt))
+                  : "-"}
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
-
-export default Profile;
