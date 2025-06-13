@@ -1,15 +1,22 @@
-// import "./App.css";
-// import "./index.css";
+import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import Home from "./pages/home";
-import Contact from "./pages/contact";
-import About from "./pages/about";
-import Service from "./pages/service";
-import Login from "./pages/login";
-import CategoryPackages from "./components/user/CategoryPackages";
+// Halaman user
+import Home from "./pages/user/home";
+import Contact from "./pages/user/contact";
+import About from "./pages/user/about";
+import Services from "./components/user/servives";
+import CategoryPackage from "./components/user/CategoryPackages";
+import Transaction from "./components/user/Transaction";
 
+// Dashboard user
+import DashboardLayout from "./components/user/dashboard/dashboardLayout";
+import Notifikasi from "./components/user/dashboard/Notifikasi";
+import Profile from "./components/user/dashboard/Profile";
+import Transaksi from "./components/user/dashboard/transaksi";
+
+// Admin
 import Dashboard from "./pages/admin/dashboard";
 import DUser from "./pages/admin/dUser";
 import DAdmin from "./pages/admin/dAdmin";
@@ -19,8 +26,11 @@ import DTransaksi from "./pages/admin/dTransaksi";
 import DLaporan from "./pages/admin/dLaporan";
 import DEvent from "./pages/admin/event";
 
+// Layout
 import UserLayout from "./layout/user";
 import AdminLayout from "./layout/admin";
+import Login from "./components/user/auth/login";
+import Register from "./components/user/auth/register";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -37,12 +47,14 @@ function App() {
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUsername("");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("username");
   };
 
   return (
     <BrowserRouter>
       <Routes>
-        {/* ADMIN ROUTES */}
+        {/* Admin Routes */}
         <Route
           path="/admin/dashboard"
           element={
@@ -108,7 +120,25 @@ function App() {
           }
         />
 
-        {/* USER ROUTES */}
+        {/* User Routes */}
+        <Route
+          path="/login"
+          element={
+            <UserLayout>
+              <Login />
+            </UserLayout>
+          }
+        />
+
+        <Route
+          path="/register"
+          element={
+            <UserLayout>
+              <Register />
+            </UserLayout>
+          }
+        />
+
         <Route
           path="/"
           element={
@@ -165,7 +195,31 @@ function App() {
               username={username}
               onLogout={handleLogout}
             >
-              <Service />
+              <Services />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/kategori/:id"
+          element={
+            <UserLayout
+              isLoggedIn={isLoggedIn}
+              username={username}
+              onLogout={handleLogout}
+            >
+              <CategoryPackage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/transaksi"
+          element={
+            <UserLayout
+              isLoggedIn={isLoggedIn}
+              username={username}
+              onLogout={handleLogout}
+            >
+              <Transaction />
             </UserLayout>
           }
         />
@@ -181,18 +235,13 @@ function App() {
             </UserLayout>
           }
         />
-        <Route
-          path="/kategori/:id"
-          element={
-            <UserLayout
-              isLoggedIn={isLoggedIn}
-              username={username}
-              onLogout={handleLogout}
-            >
-              <CategoryPackages />
-            </UserLayout>
-          }
-        />
+
+        {/* User Dashboard Routes */}
+        <Route path="/dashboard/*" element={<DashboardLayout />}>
+          <Route path="profile" element={<Profile />} />
+          <Route path="transaksi" element={<Transaksi />} />
+          <Route path="notifikasi" element={<Notifikasi />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

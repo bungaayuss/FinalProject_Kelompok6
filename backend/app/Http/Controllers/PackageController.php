@@ -18,7 +18,7 @@ class PackageController extends Controller
                 "message" => "Resource data not found!"
             ], 200);
         }
-        
+
         return response()->json([
             "success" => true,
             "message" => "Get All Resource",
@@ -47,7 +47,7 @@ class PackageController extends Controller
         // 3. Upload Image
         $image = $request->file('image');
         $image->store('packages', 'public');
-        
+
         // 4. Insert data
         $package = Package::create([
             'name' => $request->name,
@@ -56,7 +56,7 @@ class PackageController extends Controller
             'price' => $request->price,
             'categories_id' => $request->categories_id
         ]);
-        
+
         // 5. Response
         return response()->json([
             "success" => true,
@@ -67,7 +67,7 @@ class PackageController extends Controller
 
     public function show(string $id){
         $package = Package::find($id);
-        
+
         if (!$package){
             return response()->json([
                 "success" => false,
@@ -128,7 +128,7 @@ class PackageController extends Controller
 
             $data['image'] = $image->hashName();
         }
-            
+
 
         // 5. Update data baru ke database
         $package->update($data);

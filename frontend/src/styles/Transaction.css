@@ -1,0 +1,324 @@
+/* Transaction Page Styles */
+.transaction-section {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    padding: 50px 20px;
+  }
+  
+  .transaction-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .back-btn {
+    background: #64748b;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+  
+  .back-btn:hover {
+    background: #475569;
+    transform: translateX(-5px);
+  }
+  
+  .transaction-title {
+    color: #1c57bc;
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin: 0;
+  }
+  
+  .transaction-content {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Package Summary */
+  .package-summary {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    height: fit-content;
+    position: sticky;
+    top: 2rem;
+  }
+  
+  .package-summary h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .summary-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  
+  .summary-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .summary-details {
+    padding: 1.5rem;
+  }
+  
+  .summary-details h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+  
+  .summary-details p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+  
+  .price-breakdown {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 1rem;
+  }
+  
+  .price-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+  }
+  
+  .price-item.total {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 0.75rem;
+    margin-top: 0.75rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #1c57bc;
+  }
+  
+  /* Transaction Form */
+  .transaction-form {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+  }
+  
+  .transaction-form h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group.full-width {
+    grid-column: 1 / -1;
+  }
+  
+  .form-group label {
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f8fafc;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #1c57bc;
+    background-color: white;
+    box-shadow: 0 0 0 4px rgba(28, 87, 188, 0.1);
+  }
+  
+  .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+  }
+  
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, #1c57bc, #3b82f6);
+    color: white;
+    box-shadow: 0 5px 20px rgba(28, 87, 188, 0.3);
+  }
+  
+  .btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #154a9c, #2563eb);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(28, 87, 188, 0.4);
+  }
+  
+  .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  .btn-secondary {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 2px solid #e2e8f0;
+  }
+  
+  .btn-secondary:hover {
+    background: #e2e8f0;
+    color: #475569;
+  }
+  
+  /* Error Container */
+  .error-container {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 2rem auto;
+  }
+  
+  .error-container h2 {
+    font-size: 1.5rem;
+    color: #e63946;
+    margin-bottom: 1rem;
+  }
+  
+  .error-container p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2rem;
+  }
+  
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .transaction-content {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  
+    .package-summary {
+      position: static;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .transaction-section {
+      padding: 30px 15px;
+    }
+  
+    .transaction-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  
+    .transaction-title {
+      font-size: 2rem;
+    }
+  
+    .form-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  
+    .form-actions {
+      flex-direction: column;
+    }
+  
+    .btn-primary,
+    .btn-secondary {
+      width: 100%;
+    }
+  
+    .package-summary,
+    .transaction-form {
+      padding: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .transaction-title {
+      font-size: 1.8rem;
+    }
+  
+    .summary-details {
+      padding: 1rem;
+    }
+  
+    .package-summary,
+    .transaction-form {
+      padding: 1rem;
+    }
+  }
+  

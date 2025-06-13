@@ -1,6 +1,5 @@
-// dari sini
-import React, { useState, useEffect } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { useEffect, useState } from "react";
+import { getCategories } from "../../../_services/categories";
 
 export default function FormTambahPackageEvent({
   show,
@@ -8,58 +7,56 @@ export default function FormTambahPackageEvent({
   onSubmit,
   initialData,
 }) {
+  const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
-    kategori: "",
+    kategori_id: 0,
     nama: "",
     deskripsi: "",
-    harga: "",
-    foto: "",
+    harga: 0,
+    foto: null,
   });
 
   useEffect(() => {
+    const fetchData = async () => {
+      const [categoriesData] = await Promise.all([getCategories()]);
+      setCategories(categoriesData);
+      console.log(categoriesData);
+    };
+
     if (initialData) {
-      setFormData({
-        kategori: initialData.kategori || "",
-        nama: initialData.nama || "",
-        deskripsi: initialData.deskripsi || "",
-        harga:
-          initialData.harga !== undefined ? initialData.harga.toString() : "",
-        foto: initialData.foto || "",
-      });
+      setFormData(initialData);
+      console.log("Data sebelum di-edit:", initialData);
     } else {
       setFormData({
-        kategori: "",
+        kategori_id: "",
         nama: "",
         deskripsi: "",
         harga: "",
-        foto: "",
+        foto: null,
       });
     }
+
+    fetchData();
   }, [initialData, show]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    const { name, value, files } = e.target;
+    if (name === "image") {
+      setFormData({
+        ...formData,
+        image: files[0],
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (isNaN(formData.harga) || Number(formData.harga) < 0) {
-      alert("Harga harus berupa angka positif");
-      return;
-    }
-
-    onSubmit({
-      kategori: formData.kategori,
-      nama: formData.nama,
-      deskripsi: formData.deskripsi,
-      harga: Number(formData.harga),
-      foto: formData.foto,
-    });
+    onSubmit(formData);
   };
 
   if (!show) return null;
@@ -86,14 +83,20 @@ export default function FormTambahPackageEvent({
             <div className="modal-body">
               <div className="mb-3">
                 <label className="form-label">Kategori</label>
-                <input
-                  type="text"
+                <select
                   className="form-control"
-                  name="kategori"
-                  value={formData.kategori}
+                  name="kategori_id"
+                  value={formData.kategori_id}
                   onChange={handleChange}
                   required
-                />
+                >
+                  <option value="">Pilih Kategori</option>
+                  {categories.map((kategori) => (
+                    <option key={kategori.id} value={kategori.id}>
+                      {kategori.category_name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="mb-3">
@@ -133,14 +136,14 @@ export default function FormTambahPackageEvent({
               </div>
 
               <div className="mb-3">
-                <label className="form-label">Foto (URL)</label>
+                <label className="form-label">Foto</label>
                 <input
-                  type="text"
+                  type="file"
                   className="form-control"
                   name="foto"
-                  value={formData.foto}
+                  accept="image/*"
                   onChange={handleChange}
-                  placeholder="Masukkan URL foto"
+                  required
                 />
               </div>
             </div>

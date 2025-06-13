@@ -26,7 +26,11 @@ class TransactionController extends Controller
             'packages_id' => 'required|integer',
             'event_name' => 'required|string',
             'event_date' => 'required|string',
-            'event_detail' => 'required|string'
+            'event_time' => 'required|string',
+            'venue' => 'required|string',
+            'guest_count' => 'required|integer',
+            'payment_method' => 'required|string',
+            'special_requests' => 'required|string'
         ]);
 
         if ($validator->fails()){
@@ -44,9 +48,13 @@ class TransactionController extends Controller
             'packages_id' => $request->packages_id,
             'event_name' => $request->event_name,
             'event_date' => $request->event_date,
-            'event_detail' => $request->event_detail,
-            'transaction_date' => now()->toDateString(),
+            'event_time' => $request->event_time,
+            'venue' => $request->venue,
+            'guest_count' => $request->guest_count,
+            'payment_method' => $request->payment_method,
+            'special_requests' => $request->special_requests,
             'total' => $total,
+            'transaction_date' => now()->toDateString(),
             'status' => 'Waiting verification'
         ]);
 

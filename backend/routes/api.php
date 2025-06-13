@@ -15,8 +15,16 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 //Guest
-Route::apiResource('packages', PackageController::class)->only(['index', 'show']);
-Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
+Route::apiResource('packages', PackageController::class)->only(['index', 'show','update','destroy']);
+Route::apiResource('categories', CategoryController::class)->only(['index', 'show','update','destroy']);
+Route::apiResource('users', UserController::class)->only(['index', 'show','update','destroy']);
+    
+        //2. confirmationz
+        Route::apiResource('confirmations', ConfirmationController::class)->only(['index', 'show','update','destroy']);
+    
+        //3. transacton
+        Route::apiResource('transactions', TransactionController::class)->only(['index', 'show','update','destroy']);
+    
 
 // register
 Route::post('/register', [AuthController::class, 'register']);
@@ -41,18 +49,18 @@ Route::middleware('auth:api')->group(function () {
     //Admin
     Route::middleware(['role:admin'])->group(function () { 
         //1. liat user
-        Route::apiResource('users', UserController::class)->only(['index', 'show']);
+        // Route::apiResource('users', UserController::class)->only(['index', 'show']);
     
-        //2. confirmationz
-        Route::apiResource('confirmations', ConfirmationController::class)->except(['store']);
+        // //2. confirmationz
+        // Route::apiResource('confirmations', ConfirmationController::class)->except(['store']);
     
-        //3. transacton
-        Route::apiResource('transactions', TransactionController::class)->except(['store']);
+        // //3. transacton
+        // Route::apiResource('transactions', TransactionController::class)->except(['store']);
     
-        //4. packages
-        Route::apiResource('packages', PackageController::class)->except(['index', 'show']);
+        // //4. packages
+        // Route::apiResource('packages', PackageController::class)->except(['index', 'show']);
     
-        //5. category
-        Route::apiResource('categories', CategoryController::class)->except(methods: ['index','show']);
+        // //5. category
+        // Route::apiResource('categories', CategoryController::class)->except(methods: ['index','show']);
     });
 });
