@@ -14,6 +14,7 @@ export default function Profile() {
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const userId = userInfo?.id;
+  console.log(userId)
 
   useEffect(() => {
     const fetchUser = async () => {
