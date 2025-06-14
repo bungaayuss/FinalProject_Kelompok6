@@ -19,10 +19,24 @@ class PackageController extends Controller
             ], 200);
         }
 
+        $data = $packages->map(function ($pkg) {
+            return [
+                'id' => $pkg->id,
+                'name' => $pkg->name,
+                'description' => $pkg->description,
+                'image' => $pkg->image,
+                'price' => $pkg->price,
+                'categories_id' => $pkg->categories_id,
+                'category_name' => $pkg->category ? $pkg->category->category_name : null,
+                'created_at' => $pkg->created_at,
+                'updated_at' => $pkg->updated_at
+            ];
+        });
+
         return response()->json([
             "success" => true,
             "message" => "Get All Resource",
-            "data" => $packages
+            "data" => $data
         ], 200);
     }
 
