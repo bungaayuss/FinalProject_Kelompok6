@@ -61,10 +61,7 @@ export default function Transaksi() {
 
   const getStatusBadge = (status) => {
     const statusClasses = {
-      Selesai: "status-completed",
-      Berlangsung: "status-ongoing",
-      "Menunggu Pembayaran": "status-pending",
-      Dibatalkan: "status-cancelled",
+      Rejected: "status-cancelled",
       "Waiting verification": "status-pending",
       Paid: "status-completed",
     };

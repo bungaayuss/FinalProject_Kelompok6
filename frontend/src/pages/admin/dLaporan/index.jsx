@@ -7,17 +7,18 @@ import {
   updateConfirmations,
 } from "../../../_services/confirmation";
 import { getUsers } from "../../../_services/user";
+import { FaEdit } from "react-icons/fa";
+import FormEditStatusKonfirmasi from "../../../components/admin/form/konfirmasi";
 
 export default function LaporanKonfirmasi() {
   const [confirmations, setConfirmations] = useState([]);
-  const [customers, setCustomers] = useState([]);
+  const [, setCustomers] = useState([]);
   const [, setAdmins] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [editData, setEditData] = useState(null);
 
   const columns = [
-    {
-      title: "Transaksi ID",
-      dataIndex: "transactions_id",
-    },
+    { title: "Transaksi ID", dataIndex: "transactions_id" },
     {
       title: "Bukti Pembayaran",
       dataIndex: "image",
@@ -32,34 +33,19 @@ export default function LaporanKonfirmasi() {
           "Tidak ada gambar"
         ),
     },
-    {
-      title: "Tanggal Pembayaran",
-      dataIndex: "payment_date",
-    },
+    { title: "Tanggal Pembayaran", dataIndex: "payment_date" },
+    { title: "Status", dataIndex: "status" },
     {
       title: "Total",
       dataIndex: "amount",
       render: (amount) => `Rp ${parseInt(amount).toLocaleString()}`,
     },
-    {
-      title: "Nama Customer",
-      dataIndex: "user_id",
-      render: (user_id) => {
-        const customer = customers.find((u) => u.id === user_id);
-        return customer ? customer.name : "Tidak ditemukan";
-      },
-    },
+    { title: "Nama Customer", dataIndex: "user_name" },
     {
       title: "Nama Admin",
       dataIndex: "admin_name",
-      render: (admin_name) => admin_name || "Belum diverifikasi",
+      render: (text) => (text ? text : "Belum diverifikasi"),
     },
-  ];
-
-  const statusOptions = [
-    { label: "Menunggu Verifikasi", value: "Waiting verification" },
-    { label: "Terbayar", value: "Paid" },
-    { label: "Ditolak", value: "Rejected" },
   ];
 
   useEffect(() => {
@@ -81,23 +67,32 @@ export default function LaporanKonfirmasi() {
     fetchData();
   }, []);
 
-  const handleChange = async (e, record) => {
-    const newStatus = e.target.value;
-    const adminName = localStorage.getItem("admin_name");
+  const handleEditClick = (data) => {
+    setEditData(data);
+    setShowForm(true);
+  };
+
+  const handleSubmitForm = async (dataFromForm) => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    const adminName = userInfo?.name || "Admin";
 
     try {
-      await updateConfirmations(record.transactions_id, {
-        status: newStatus,
-        admin_name: adminName,
-      });
+      const payload = new FormData();
+      payload.append("status", dataFromForm.status);
+      payload.append("_method", "PUT");
 
-      setConfirmations((prevConfirmations) =>
-        prevConfirmations.map((confirmation) =>
-          confirmation.transactions_id === record.transactions_id
-            ? { ...confirmation, status: newStatus, admin_name: adminName }
-            : confirmation
-        )
+      await updateConfirmations(editData.transactions_id, payload);
+
+      const updatedList = confirmations.map((item) =>
+        item.transactions_id === editData.transactions_id
+          ? { ...item, status: dataFromForm.status, admin_name: adminName }
+          : item
       );
+
+      setConfirmations(updatedList);
+      setShowForm(false);
+      setEditData(null);
+      alert("Status berhasil diperbarui!");
     } catch (error) {
       console.error("Gagal memperbarui status:", error);
       alert("Gagal memperbarui status transaksi.");
@@ -114,36 +109,25 @@ export default function LaporanKonfirmasi() {
             title="Laporan Konfirmasi Pembayaran"
             columns={columns}
             data={confirmations}
-            renderAction={(record) => (
-              <select
-                className="form-select form-select-sm"
-                value={record.status}
-                onChange={(e) => handleChange(e, record)}
-                style={{
-                  backgroundColor:
-                    record.status === "Paid"
-                      ? "#d1e7dd !important"
-                      : record.status === "Rejected"
-                      ? "#f8d7da !important"
-                      : "#fff3cd !important",
-                  borderRadius: "8px",
-                  color:
-                    record.status === "Paid"
-                      ? "#0f5132 !important"
-                      : record.status === "Rejected"
-                      ? "#842029 !important"
-                      : "#664d03 !important",
-                  fontWeight: "500",
-                }}
+            renderAction={(confirmation) => (
+              <button
+                className="btn btn-sm btn-warning me-2"
+                onClick={() => handleEditClick(confirmation)}
+                title="Edit"
               >
-                <option value="">Pilih Status</option>
-                {statusOptions.map((status) => (
-                  <option key={status.value} value={status.value}>
-                    {status.label}
-                  </option>
-                ))}
-              </select>
+                <FaEdit />
+              </button>
             )}
+          />
+
+          <FormEditStatusKonfirmasi
+            show={showForm}
+            onClose={() => {
+              setShowForm(false);
+              setEditData(null);
+            }}
+            onSubmit={handleSubmitForm}
+            initialData={editData}
           />
         </div>
       </div>

@@ -10,12 +10,28 @@ use Illuminate\Support\Facades\Validator;
 class ConfirmationController extends Controller
 {
     public function index(){
-        $confirmation = Confirmation::all();
-        
+        $confirmations = Confirmation::with(['user', 'transaction.user'])->get();
+
+        $data = $confirmations->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'transactions_id' => $item->transactions_id,
+                'user_id' => $item->user_id,
+                'user_name' => $item->user ? $item->user->name : ($item->transaction->user->name ?? null),
+                'image' => $item->image,
+                'payment_date' => $item->payment_date,
+                'amount' => $item->amount,
+                'status' => $item->status,
+                'admin_name' => $item->admin_name,
+                'created_at' => $item->created_at,
+                'updated_at' => $item->updated_at,
+            ];
+        });
+
         return response()->json([
             "success" => true,
             "message" => "Get All Resource",
-            "data" => $confirmation
+            "data" => $data
         ], 200);
     }
 

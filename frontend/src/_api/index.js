@@ -6,5 +6,5 @@ export const API = axios.create({
     baseURL: `${url}/api`
 })
 
-export const confirmationImage = `${url}/storage`;
+export const confirmationImage = `${url}/storage/confirmations`;
 export const packagesImage = `${url}/storage/packages`;
