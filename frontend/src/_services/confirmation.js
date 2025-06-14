@@ -1,13 +1,21 @@
 import { API } from "../_api";
 
 export const getConfirmations = async () => {
-  const { data } = await API.get("/confirmations");
+  const { data } = await API.get("/confirmations", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+  });
   return data.data;
 };
 
 export const createConfirmations = async (data) => {
   try {
-    const response = await API.post("/confirmations", data);
+    const response = await API.post("/confirmations", data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.log(error);
@@ -17,7 +25,11 @@ export const createConfirmations = async (data) => {
 
 export const showConfirmations = async (id) => {
   try {
-    const { data } = await API.get(`/confirmations/${id}`);
+    const { data } = await API.get(`/confirmations/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
     return data.data;
   } catch (error) {
     console.log(error);
@@ -45,7 +57,11 @@ export const updateConfirmations = async (id, data) => {
 
 export const deleteConfirmations = async (id) => {
   try {
-    await API.delete(`/confirmations/${id}`);
+    await API.delete(`/confirmations/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
   } catch (error) {
     console.log(error);
     throw error;
