@@ -200,15 +200,6 @@ export default function Sidebar() {
             Event
           </Link>
         </li>
-        <li className="nav-item d-flex align-items-center gap-2">
-          <FaCog />
-          <Link
-            to="/admin/pengaturan"
-            className="text-white text-decoration-none"
-          >
-            Pengaturan
-          </Link>
-        </li>
       </ul>
 
       <div
