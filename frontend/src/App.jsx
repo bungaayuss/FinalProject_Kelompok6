@@ -31,6 +31,7 @@ import UserLayout from "./layout/user";
 import AdminLayout from "./layout/admin";
 import Login from "./components/user/auth/login";
 import Register from "./components/user/auth/register";
+// import Transaksi from "./components/user/dashboard/transaksi";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -208,6 +209,18 @@ function App() {
               onLogout={handleLogout}
             >
               <CategoryPackage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/transaction"
+          element={
+            <UserLayout
+              isLoggedIn={isLoggedIn}
+              username={username}
+              onLogout={handleLogout}
+            >
+              <Transaction />
             </UserLayout>
           }
         />
