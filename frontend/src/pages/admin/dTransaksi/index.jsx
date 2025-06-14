@@ -14,8 +14,8 @@ export default function DaftarTransaksi() {
   const [transactions, setTransactions] = useState([]);
   const columns = [
     { title: "ID", dataIndex: "id" },
-    { title: "User ID", dataIndex: "user_id" },
-    { title: "Package ID", dataIndex: "packages_id" },
+    { title: "User", dataIndex: "user_name" },
+    { title: "Package", dataIndex: "package_name" },
     { title: "Nama Event", dataIndex: "event_name" },
     { title: "Tanggal Event", dataIndex: "event_date" },
     { title: "Permintaan Tambahan", dataIndex: "special_request" },
@@ -23,7 +23,7 @@ export default function DaftarTransaksi() {
     { title: "Jumlah Tamu", dataIndex: "guest_count" },
     { title: "Metode Pembayaran", dataIndex: "payment_method" },
     { title: "Tanggal Transaksi", dataIndex: "transaction_date" },
-    { title: "Total", dataIndex: "total" },   
+    { title: "Total", dataIndex: "total" },
     { title: "Status", dataIndex: "status" },
   ];
 

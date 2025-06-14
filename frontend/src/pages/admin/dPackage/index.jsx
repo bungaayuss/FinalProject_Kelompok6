@@ -17,7 +17,7 @@ import { packagesImage } from "../../../_api";
 
 export default function DaftarPackageEvent() {
   const [packages, setPackages] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [, setCategories] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [packageEdit, setPackageEdit] = useState(null);
 
@@ -26,14 +26,7 @@ export default function DaftarPackageEvent() {
     { title: "Nama Package", dataIndex: "name" },
     { title: "Deskripsi", dataIndex: "description" },
     { title: "Harga", dataIndex: "price" },
-    {
-      title: "Kategori",
-      dataIndex: "categories_id",
-      render: (categories_id) => {
-        const category = categories.find((cat) => cat.id === categories_id);
-        return category ? category.category_name : "Kategori tidak ditemukan";
-      },
-    },
+    { title: "Kategori", dataIndex: "category_name" },
     {
       title: "Gambar",
       dataIndex: "image",
@@ -57,6 +50,8 @@ export default function DaftarPackageEvent() {
           getPackages(),
           getCategories(),
         ]);
+
+        console.log("📂 Categories:", categoriesData);
         setPackages(packagesData);
         setCategories(categoriesData);
       } catch (error) {

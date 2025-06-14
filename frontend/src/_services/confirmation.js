@@ -27,13 +27,21 @@ export const showConfirmations = async (id) => {
 
 export const updateConfirmations = async (id, data) => {
   try {
-    const response = await API.post(`/confirmations/${id}`, data);
+    const token = localStorage.getItem("accessToken");
+
+    const response = await API.post(`/confirmations/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+    });
+
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log(error.response?.data || error.message);
     throw error;
   }
 };
+
 
 export const deleteConfirmations = async (id) => {
   try {
