@@ -15,17 +15,9 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 //Guest
-Route::apiResource('packages', PackageController::class)->only(['index', 'show','update','destroy']);
-Route::apiResource('categories', CategoryController::class)->only(['index', 'show','update','destroy']);
-Route::apiResource('users', UserController::class)->only(['index', 'show','update','destroy']);
+Route::apiResource('packages', PackageController::class)->only(['index', 'show']);
+Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
     
-        //2. confirmationz
-        Route::apiResource('confirmations', ConfirmationController::class)->only(['index', 'show','update','destroy']);
-    
-        //3. transacton
-        Route::apiResource('transactions', TransactionController::class)->only(['index', 'show','update','destroy']);
-    
-
 // register
 Route::post('/register', [AuthController::class, 'register']);
 
@@ -38,7 +30,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api'
 //User
 Route::middleware('auth:api')->group(function () {
     //1. update profile user (role customer)
-    Route::put('update', [UserController::class, 'update']);
+    Route::apiResource('users', UserController::class)->only(['index', 'show', 'update']);
 
     //2. confirmations
     Route::apiResource('confirmations', ConfirmationController::class)->only(['store']);
@@ -49,18 +41,18 @@ Route::middleware('auth:api')->group(function () {
     //Admin
     Route::middleware(['role:admin'])->group(function () { 
         //1. liat user
-        // Route::apiResource('users', UserController::class)->only(['index', 'show']);
+        Route::apiResource('users', UserController::class)->except(['update']);
     
-        // //2. confirmationz
-        // Route::apiResource('confirmations', ConfirmationController::class)->except(['store']);
+        //2. confirmationz
+        Route::apiResource('confirmations', ConfirmationController::class)->except(['store']);
     
-        // //3. transacton
-        // Route::apiResource('transactions', TransactionController::class)->except(['store']);
+        //3. transacton
+        Route::apiResource('transactions', TransactionController::class)->except(['store']);
     
-        // //4. packages
-        // Route::apiResource('packages', PackageController::class)->except(['index', 'show']);
+        //4. packages
+        Route::apiResource('packages', PackageController::class)->except(['index', 'show']);
     
-        // //5. category
-        // Route::apiResource('categories', CategoryController::class)->except(methods: ['index','show']);
+        //5. category
+        Route::apiResource('categories', CategoryController::class)->except(methods: ['index','show']);
     });
 });
