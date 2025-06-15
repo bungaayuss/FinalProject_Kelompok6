@@ -106,7 +106,7 @@ export default function Login() {
             </div>
 
             <div className="d-grid mb-3">
-              <button type="submit" className="btn btn-primary rounded-pill">
+              <button type="submit" className="btn btn-primary w-100 d-flex justify-content-center align-items-center">
                 {loading ? "Signing in..." : "Sign in"}
               </button>
             </div>
