@@ -38,7 +38,7 @@ class PackageSeeder extends Seeder
         Package::create([
             'name' => 'Paket Wedding Outdoor Elegan',
             'description' => 'Taman outdoor + Dekorasi elegan + Dokumentasi drone',
-            'image' => 'wedding_outdoor.jpg',
+            'image' => 'wedding_outdoor_elegan.jpg',
             'price' => 14000000,
             'categories_id' => 1,
         ]);
@@ -47,7 +47,7 @@ class PackageSeeder extends Seeder
         Package::create([
             'name' => 'Paket Ulang Tahun Aesthetic',
             'description' => 'Dekorasi ala Pinterest + Neon Sign',
-            'image' => 'birthday_aesthetic.jpg',
+            'image' => 'birthday_aesthetic.jpeg',
             'price' => 3000000,
             'categories_id' => 2,
         ]);
@@ -107,7 +107,7 @@ class PackageSeeder extends Seeder
         Package::create([
             'name' => 'Paket Graduation Garden Party',
             'description' => 'Outdoor setup + Foto Booth + Snack Table',
-            'image' => 'graduation_garden.jpg',
+            'image' => 'graduation_garden.jpeg',
             'price' => 5500000,
             'categories_id' => 4,
         ]);
@@ -137,14 +137,14 @@ class PackageSeeder extends Seeder
         Package::create([
             'name' => 'Paket Engagement Bohemian',
             'description' => 'Tema rustic + Lampu gantung + Standing Flowers',
-            'image' => 'engagement_boho.jpg',
+            'image' => 'engagement_boho.jpeg',
             'price' => 6000000,
             'categories_id' => 5,
         ]);
         Package::create([
             'name' => 'Paket Engagement Classic',
             'description' => 'Dekorasi elegan + Musik akustik',
-            'image' => 'engagement_classic.jpg',
+            'image' => 'engagement_classic.jpeg',
             'price' => 6500000,
             'categories_id' => 5,
         ]);

@@ -1,48 +1,38 @@
-"use client"
-
-import { useNavigate } from "react-router-dom"
-import "../../../styles/services.css"
-import "bootstrap/dist/css/bootstrap.min.css"
+import { useNavigate } from "react-router-dom";
+import "../../../styles/services.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { useEffect, useState } from "react";
+import { getCategories } from "../../../_services/categories";
 
 export default function Services() {
-  const navigate = useNavigate()
+  const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
-  const categories = [
-    {
-      id: 1,
-      name: "Wedding",
-      image: "/paket1.jpg",
-      description: "Paket pernikahan dengan berbagai tema dan konsep",
-    },
-    {
-      id: 2,
-      name: "Birthday Party",
-      image: "/paket2.jpeg",
-      description: "Paket ulang tahun untuk segala usia dengan tema menarik",
-    },
-    {
-      id: 3,
-      name: "Corporate Event",
-      image: "/paket3.jpeg",
-      description: "Paket acara perusahaan, konser, dan hiburan",
-    },
-    {
-      id: 4,
-      name: "Graduation",
-      image: "/paket4.jpg",
-      description: "Paket wisuda dan perayaan kelulusan",
-    },
-    {
-      id: 5,
-      name: "Engagement",
-      image: "/paket5.jpg",
-      description: "Paket lamaran dan pertunangan romantis",
-    },
-  ]
+  useEffect(() => {
+    const fetchData = async () => {
+      const [categoriesData] = await Promise.all([getCategories()]);
+      setCategories(categoriesData);
+    };
+
+    fetchData();
+  }, []);
+
+  const getImageByCategoryId = (id) => {
+    const imageMap = {
+      1: "/paket1.jpg",
+      2: "/paket2.jpeg",
+      3: "/paket3.jpeg",
+      4: "/paket4.jpg",
+      5: "/paket5.jpg",
+    };
+
+    return imageMap[id] || "/blank.jpg";
+  };
+  
 
   const handleBooking = (categoryId) => {
-    navigate(`/kategori/${categoryId}`)
-  }
+    navigate(`/kategori/${categoryId}`);
+  };
 
   return (
     <div className="services-wrapper">
@@ -51,7 +41,9 @@ export default function Services() {
           <div className="row justify-content-center">
             <div className="col-12 text-center mb-5">
               <h2 className="services-title">Services & Packages</h2>
-              <p className="services-subtitle-desc">Pilih kategori event yang sesuai dengan kebutuhan Anda</p>
+              <p className="services-subtitle-desc">
+                Pilih kategori event yang sesuai dengan kebutuhan Anda
+              </p>
             </div>
           </div>
 
@@ -61,15 +53,23 @@ export default function Services() {
                 {categories.map((cat) => (
                   <div className="category-card" key={cat.id}>
                     <div className="category-image-container">
-                      <img src={cat.image || "/placeholder.svg"} alt={cat.name} className="category-image" />
+                      <img
+                        src={getImageByCategoryId(cat.id)}
+                        alt={cat.name}
+                        className="category-image"
+                      />
+
                       <div className="category-overlay">
-                        <button className="category-btn" onClick={() => handleBooking(cat.id)}>
+                        <button
+                          className="category-btn"
+                          onClick={() => handleBooking(cat.id)}
+                        >
                           Lihat Paket
                         </button>
                       </div>
                     </div>
                     <div className="category-content">
-                      <h5 className="category-name">{cat.name}</h5>
+                      <h5 className="category-name">{cat.category_name}</h5>
                       <p className="category-description">{cat.description}</p>
                     </div>
                   </div>
@@ -80,5 +80,5 @@ export default function Services() {
         </div>
       </section>
     </div>
-  )
+  );
 }
