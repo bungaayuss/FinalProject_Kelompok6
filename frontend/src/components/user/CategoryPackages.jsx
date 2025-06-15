@@ -53,19 +53,9 @@ export default function CategoryPackage() {
   };
 
   const handleSelectPackage = (pkg) => {
-    const originalPrice = getOriginalPrice(pkg.price);
-    const features = getFeatures(pkg.categories_id, pkg.name);
-
-    const selectedPackage = {
-      ...pkg,
-      originalPrice,
-      features,
-    };
-
-    localStorage.setItem("selectedPackage", JSON.stringify(selectedPackage));
-    navigate("/transaction");
+    navigate("/transaction", { state: { package: pkg } });
   };
-
+  
   const categoryName = packages[0]?.category_name || "Unknown";
 
   return (

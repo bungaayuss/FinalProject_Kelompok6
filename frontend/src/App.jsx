@@ -33,7 +33,6 @@ import DEvent from "./pages/admin/event";
 // Layout
 import UserLayout from "./layout/user";
 import AdminLayout from "./layout/admin";
-// import Transaksi from "./components/user/dashboard/transaksi";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
