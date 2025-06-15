@@ -16,7 +16,7 @@ Route::get('/user', function (Request $request) {
 
 //Guest
 Route::apiResource('packages', PackageController::class)->only(['index', 'show']);
-Route::apiResource('categories', CategoryController::class)->only(['index', 'show', 'store']);
+Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
     
 // register
 Route::post('/register', [AuthController::class, 'register']);
@@ -53,6 +53,6 @@ Route::middleware('auth:api')->group(function () {
         Route::apiResource('packages', PackageController::class)->except(['index', 'show']);
     
         //5. category
-        Route::apiResource('categories', CategoryController::class)->except(methods: ['index','show', 'store']);
+        Route::apiResource('categories', CategoryController::class)->except(methods: ['index','show']);
     });
 });
