@@ -20,7 +20,6 @@ return new class extends Migration
             $table->time('event_time');
             $table->string('venue');
             $table->integer('guest_count');
-            $table->string('payment_method');
             $table->text('special_requests');
             $table->date('transaction_date');
             $table->decimal('total', 12, 2);

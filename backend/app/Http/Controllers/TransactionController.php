@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Validator;
 class TransactionController extends Controller
 {
     public function index(){
-        $transactions = Transaction::with(['user', 'package'])->get();
-    
+        $transactions = Transaction::with(['user', 'package', 'confirmation'])->get();
+
         $data = $transactions->map(function ($trx) {
             return [
                 'id' => $trx->id,
@@ -23,7 +23,7 @@ class TransactionController extends Controller
                 'event_date' => $trx->event_date,
                 'venue' => $trx->venue,
                 'guest_count' => $trx->guest_count,
-                'payment_method' => $trx->payment_method,
+                'payment_method' => $trx->confirmation?->payment_method ?? null,
                 'special_requests' => $trx->special_requests,
                 'transaction_date' => $trx->transaction_date,
                 'total' => $trx->total,
@@ -32,7 +32,7 @@ class TransactionController extends Controller
                 'updated_at' => $trx->updated_at,
             ];
         });
-    
+
         return response()->json([
             "success" => true,
             "message" => "Get All Resource",
@@ -50,7 +50,6 @@ class TransactionController extends Controller
             'event_time' => 'required|string',
             'venue' => 'required|string',
             'guest_count' => 'required|integer',
-            'payment_method' => 'required|string',
             'special_requests' => 'required|string'
         ]);
 
@@ -72,7 +71,6 @@ class TransactionController extends Controller
             'event_time' => $request->event_time,
             'venue' => $request->venue,
             'guest_count' => $request->guest_count,
-            'payment_method' => $request->payment_method,
             'special_requests' => $request->special_requests,
             'total' => $total,
             'transaction_date' => now()->toDateString(),

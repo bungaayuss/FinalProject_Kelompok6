@@ -20,7 +20,7 @@ class ConfirmationController extends Controller
                 'user_name' => $item->user ? $item->user->name : ($item->transaction->user->name ?? null),
                 'image' => $item->image,
                 'payment_date' => $item->payment_date,
-                'amount' => $item->amount,
+                'payment_method' => $item->payment_method,
                 'status' => $item->status,
                 'admin_name' => $item->admin_name,
                 'created_at' => $item->created_at,
@@ -41,7 +41,7 @@ class ConfirmationController extends Controller
         
         $validator = Validator::make($request->all(),[
             'image' => 'required|image|mimes:jpeg,jpg,png|max:2048',
-            'amount' => 'required|numeric',
+            'payment_method' => 'required|numeric',
             'payment_date' => 'required|date_format:Y-m-d',
         ]);
 
@@ -71,7 +71,7 @@ class ConfirmationController extends Controller
             'transactions_id' => $transaction->id,
             'image' => $image->hashName(),
             'payment_date' =>  $request-> payment_date,
-            'amount' =>  $request-> amount,
+            'payment_method' =>  $request-> payment_method,
             'status' => 'Waiting verification',
             'user_id' => null,
             'admin_name' => null

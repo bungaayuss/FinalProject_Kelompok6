@@ -17,7 +17,17 @@ class ConfirmationSeeder extends Seeder
         Confirmation::create([
             'transactions_id' => 1,
             'image' => 'bukti1.jpg',
-            'amount' => 7500000.00,
+            'payment_method' => "Bca",
+            'payment_date' => Carbon::now()->subDays(1)->format('Y-m-d'),
+            'status' => 'Waiting verification',
+            'user_id' => 2,
+            'admin_name' => null
+        ]);
+
+        Confirmation::create([
+            'transactions_id' => 2,
+            'image' => 'bukti1.jpg',
+            'payment_method' => "Bca",
             'payment_date' => Carbon::now()->subDays(1)->format('Y-m-d'),
             'status' => 'Waiting verification',
             'user_id' => 2,

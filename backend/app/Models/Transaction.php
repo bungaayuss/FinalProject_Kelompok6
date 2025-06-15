@@ -21,4 +21,10 @@ class Transaction extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function confirmation()
+    {
+        return $this->hasOne(Confirmation::class, 'transactions_id');
+    }
+
 }
