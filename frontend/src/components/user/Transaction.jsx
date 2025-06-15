@@ -3,6 +3,7 @@
 import { useLocation, useNavigate } from "react-router-dom"
 import React, { useEffect, useState } from "react"
 import "../../styles/Transaction.css";
+import { createTransactions } from "../../_services/transaction";
 
 export default function Transaction() {
   const navigate = useNavigate()
@@ -33,6 +34,9 @@ export default function Transaction() {
   const [selectedBank, setSelectedBank] = useState("")
   const [paymentProof, setPaymentProof] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const userId = userInfo?.id;
+
 
   // Coba ambil data dari localStorage saat component mount
   useEffect(() => {
@@ -65,67 +69,57 @@ export default function Transaction() {
   }
 
   const handleConfirmPayment = async () => {
-    setIsSubmitting(true)
-
+    setIsSubmitting(true);
+  
     try {
-      console.log("🚀 Memulai proses transaksi...")
-
-      const adminFee = 50000
-      const totalPrice = selectedPackage.price + adminFee
-      const selectedBankData = bankOptions.find((b) => b.id === selectedBank)
-
-      // Validasi data sebelum menyimpan
+      const adminFee = 50000;
+      const totalPrice = selectedPackage.price + adminFee;
+      const selectedBankData = bankOptions.find((b) => b.id === selectedBank);
+  
       if (!formData.customerName || !formData.email || !formData.phone) {
-        throw new Error("Data customer tidak lengkap")
+        throw new Error("Data customer tidak lengkap");
       }
-
+  
       if (!selectedBankData) {
-        throw new Error("Bank tidak dipilih")
+        throw new Error("Bank tidak dipilih");
       }
-
+  
       if (!paymentProof) {
-        throw new Error("Bukti pembayaran belum diupload")
+        throw new Error("Bukti pembayaran belum diupload");
       }
-
-      // Data transaksi untuk localStorage
-      const transactionData = {
-        customer_name: formData.customerName,
-        email: formData.email,
-        phone: formData.phone,
-        event_name: `${formData.customerName} - ${selectedPackage.name}`,
-        package_name: selectedPackage.name,
-        event_date: formData.eventDate,
-        event_time: formData.eventTime,
-        venue: formData.venue,
-        guest_count: Number.parseInt(formData.guestCount) || 0,
-        special_requests: formData.specialRequests || "",
-        payment_method: selectedBankData.name,
-        total_amount: totalPrice,
-        status: "pending",
-        payment_proof: paymentProof.name,
+  
+      if (!userId) {
+        throw new Error("User belum login");
       }
-
-      console.log("📝 Data transaksi:", transactionData)
-
-      // Simpan ke localStorage
-      localStorage.setItem("transactionData", JSON.stringify(transactionData))
-      console.log("✅ Transaksi berhasil disimpan")
-
-      // Show success notification
-      showNotification("✅ Transaksi berhasil disimpan!", "success")
-
-      // Delay sebelum redirect
+  
+      // Persiapkan FormData untuk dikirim
+      const payload = new FormData();
+      payload.append("users_id", userId);
+      payload.append("packages_id", selectedPackage.id);
+      payload.append("event_name", `${formData.customerName} - ${selectedPackage.name}`);
+      payload.append("event_date", formData.eventDate);
+      payload.append("event_time", formData.eventTime);
+      payload.append("venue", formData.venue);
+      payload.append("guest_count", formData.guestCount);
+      payload.append("special_requests", formData.specialRequests || "");
+      payload.append("payment_method", selectedBankData.name);
+      payload.append("payment_proof", paymentProof);
+      payload.append("total", totalPrice);
+      payload.append("status", "Waiting verification");
+  
+      await createTransactions(payload);
+      showNotification("✅ Transaksi berhasil dikirim ke sistem!", "success");
+  
       setTimeout(() => {
-        console.log("🔄 Redirect ke halaman service...")
-        navigate("/service")
-      }, 1500)
+        navigate("/transaksi"); // arahkan ke halaman riwayat transaksi
+      }, 1500);
     } catch (error) {
-      console.error("❌ Error creating transaction:", error)
-      showNotification(`❌ Gagal menyimpan transaksi: ${error.message}`, "error")
+      console.error("❌ Gagal simpan transaksi:", error);
+      showNotification(`❌ Gagal menyimpan transaksi: ${error.message}`, "error");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };  
 
   const showNotification = (message, type) => {
     console.log(`📢 Notification: ${message}`)
