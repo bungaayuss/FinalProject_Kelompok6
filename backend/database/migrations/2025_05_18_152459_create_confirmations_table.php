@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('transactions_id')->constrained()->onDelete('cascade');
             $table->string('image');
-            $table->decimal('amount', 12, 2);
             $table->date('payment_date');
+            $table->string('payment_method');
             $table->enum('status', ['Waiting verification', 'Paid', 'Rejected']);
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade')->change();
             $table->string('admin_name')->nullable();
