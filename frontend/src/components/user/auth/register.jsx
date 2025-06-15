@@ -124,7 +124,7 @@ export default function Register() {
 
                   <button
                     type="submit"
-                    className="btn btn-primary w-100"
+                    className="btn btn-primary w-100 d-flex justify-content-center align-items-center"
                     disabled={loading}
                   >
                     {loading ? "Registering..." : "Register"}
