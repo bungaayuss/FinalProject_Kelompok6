@@ -52,9 +52,18 @@ export default function CategoryPackage() {
       .filter((item) => item !== "");
   };
 
-  const handleSelectPackage = (pkg) => {
+ const handleSelectPackage = (pkg) => {
+  const user = JSON.parse(localStorage.getItem("userInfo")); 
+
+    if (!user || !user.id) {
+      navigate("/login");
+      return;
+    }
+
     navigate("/transaction", { state: { package: pkg } });
   };
+
+
   
   const categoryName = packages[0]?.category_name || "Unknown";
 
