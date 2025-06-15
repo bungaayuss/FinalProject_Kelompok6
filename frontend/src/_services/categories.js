@@ -7,7 +7,11 @@ export const getCategories = async () => {
 
 export const createCategories = async (data) => {
   try {
-    const response = await API.post("/categories", data);
+    const response = await API.post("/categories", data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.log(error);
@@ -27,7 +31,11 @@ export const showCategories = async (id) => {
 
 export const updateCategories = async (id, data) => {
   try {
-    const response = await API.post(`/categories/${id}`, data);
+    const response = await API.post(`/categories/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.log(error);
@@ -37,7 +45,11 @@ export const updateCategories = async (id, data) => {
 
 export const deleteCategories = async (id) => {
   try {
-    await API.delete(`/categories/${id}`);
+    await API.delete(`/categories/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
   } catch (error) {
     console.log(error);
     throw error;

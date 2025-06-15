@@ -2,6 +2,10 @@ import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+// Auth
+import Login from "./components/user/auth/login";
+import Register from "./components/user/auth/register";
+
 // Halaman user
 import Home from "./pages/user/home";
 import Contact from "./pages/user/contact";
@@ -29,8 +33,6 @@ import DEvent from "./pages/admin/event";
 // Layout
 import UserLayout from "./layout/user";
 import AdminLayout from "./layout/admin";
-import Login from "./components/user/auth/login";
-import Register from "./components/user/auth/register";
 // import Transaksi from "./components/user/dashboard/transaksi";
 
 function App() {

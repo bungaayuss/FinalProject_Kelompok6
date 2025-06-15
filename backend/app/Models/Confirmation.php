@@ -21,4 +21,10 @@ class Confirmation extends Model
     {
         return $this->belongsTo(Transaction::class, 'transactions_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

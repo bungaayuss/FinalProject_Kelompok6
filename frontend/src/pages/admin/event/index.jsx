@@ -42,8 +42,8 @@ export default function EventCalendar() {
               title: item.event_name,
               start,
               end,
-              guest: item.guest_total,
-              location: item.location,
+              guest: item.guest_count,
+              location: item.venue,
             };
           });
 

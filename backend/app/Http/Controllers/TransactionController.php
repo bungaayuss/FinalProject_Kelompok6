@@ -10,15 +10,36 @@ use Illuminate\Support\Facades\Validator;
 class TransactionController extends Controller
 {
     public function index(){
-        $transaction = Transaction::all();
-        
+        $transactions = Transaction::with(['user', 'package'])->get();
+    
+        $data = $transactions->map(function ($trx) {
+            return [
+                'id' => $trx->id,
+                'user_id' => $trx->user_id,
+                'user_name' => $trx->user ? $trx->user->name : null,
+                'packages_id' => $trx->packages_id,
+                'package_name' => $trx->package ? $trx->package->name : null,
+                'event_name' => $trx->event_name,
+                'event_date' => $trx->event_date,
+                'venue' => $trx->venue,
+                'guest_count' => $trx->guest_count,
+                'payment_method' => $trx->payment_method,
+                'special_requests' => $trx->special_requests,
+                'transaction_date' => $trx->transaction_date,
+                'total' => $trx->total,
+                'status' => $trx->status,
+                'created_at' => $trx->created_at,
+                'updated_at' => $trx->updated_at,
+            ];
+        });
+    
         return response()->json([
             "success" => true,
             "message" => "Get All Resource",
-            "data" => $transaction
+            "data" => $data
         ], 200);
     }
-
+    
     public function store(Request $request){
         $customerId = $request->user()->id;
 
