@@ -1,131 +1,148 @@
-"use client"
-
-import { useNavigate } from "react-router-dom"
-import React, { useEffect, useState } from "react"
+import { useNavigate, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import "../../styles/Transaction.css";
-import { createTransactions } from "../../_services/transaction";
+import { createTransactions, getTransactions,  } from "../../_services/transaction";
+import { packagesImage } from "../../_api";
+import { createConfirmations } from "../../_services/confirmation";
 
 export default function Transaction() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [transactionId, setTransactionId] = useState(null);
 
-  // Ambil data dari localStorage, kalau tidak ada buat default
-  const [selectedPackage, setSelectedPackage] = useState({
-    name: "Paket Event",
-    description: "Paket event pilihan Anda",
-    price: 5000000,
-    image: "/images/default_package.jpg",
-  })
+  const selectedPackageFromState = location.state?.package;
 
-  // Tambahkan setelah state selectedPackage
-  const [categoryId, setCategoryId] = useState(null)
+  const [selectedPackage, setSelectedPackage] = useState(
+    selectedPackageFromState || null
+  );
 
+  const [categoryId, setCategoryId] = useState(null);
   const [formData, setFormData] = useState({
     customerName: "",
     email: "",
-    phone: "",
+    event_name: "",
     eventDate: "",
     eventTime: "",
     venue: "",
     guestCount: "",
     specialRequests: "",
-  })
+  });
 
-  const [paymentStep, setPaymentStep] = useState("form")
-  const [selectedBank, setSelectedBank] = useState("")
-  const [paymentProof, setPaymentProof] = useState(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [paymentStep, setPaymentStep] = useState("form");
+  const [selectedBank, setSelectedBank] = useState("");
+  const [paymentProof, setPaymentProof] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const userId = userInfo?.id;
-
-
-  // Coba ambil data dari localStorage saat component mount
+  
   useEffect(() => {
-    const packageData = localStorage.getItem("selectedPackage")
-    if (packageData) {
-      try {
-        const parsed = JSON.parse(packageData)
-        setSelectedPackage(parsed)
-        setCategoryId(parsed.categories_id) // Tambahkan ini
-      } catch (error) {
-        console.log(error)
-        console.log("Error parsing package data, using default")
+    if (selectedPackageFromState) {
+      setSelectedPackage(selectedPackageFromState);
+      setCategoryId(selectedPackageFromState.categories_id);
+    }
+  }, [selectedPackageFromState]);
+
+  useEffect(() => {
+    if (userInfo) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        customerName: userInfo.name || "",
+        email: userInfo.email || "",
+      }));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (paymentStep === "upload") {
+      const savedId = localStorage.getItem("transaction_id");
+      if (savedId && !transactionId) {
+        setTransactionId(savedId);
       }
     }
-  }, [])
+  }, [paymentStep]);
+  
+  useEffect(() => {
+    const fetchLatestTransactionId = async () => {
+      try {
+        const response = await getTransactions();
+        const transactions = response?.data || [];
+
+        const maxId = transactions.reduce((max, trx) => {
+          return trx.id > max ? trx.id : max;
+        }, 0);
+
+        const nextId = maxId + 1;
+        localStorage.setItem("transaction_id", nextId);
+        console.log("💾 Transaction ID disimpan:", nextId);
+      } catch (err) {
+        console.error("❌ Gagal ambil data transaksi:", err);
+      }
+    };
+
+    fetchLatestTransactionId();
+  }, []);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleBankSelection = (bank) => {
-    setSelectedBank(bank)
-    setPaymentStep("upload")
-  }
+    setSelectedBank(bank);
+    setPaymentStep("upload");
+  };
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setPaymentProof(e.target.files[0])
+      setPaymentProof(e.target.files[0]);
     }
-  }
+  };
 
-  const handleConfirmPayment = async () => {
+  const handleConfirmPayment = async (e) => {
+    e.preventDefault();
     setIsSubmitting(true);
-  
+
+    let finalTransactionId = transactionId;
+    if (!finalTransactionId) {
+      finalTransactionId = localStorage.getItem("transaction_id");
+    }
+
+    if (!finalTransactionId) {
+      alert("❌ ID transaksi belum tersedia. Coba lagi.");
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
-      const adminFee = 50000;
-      const totalPrice = selectedPackage.price + adminFee;
-      const selectedBankData = bankOptions.find((b) => b.id === selectedBank);
-  
-      if (!formData.customerName || !formData.email || !formData.phone) {
-        throw new Error("Data customer tidak lengkap");
-      }
-  
-      if (!selectedBankData) {
-        throw new Error("Bank tidak dipilih");
-      }
-  
-      if (!paymentProof) {
-        throw new Error("Bukti pembayaran belum diupload");
-      }
-  
-      // if (!userId) {
-      //   throw new Error("User belum login");
-      // }
-  
-      // Persiapkan FormData untuk dikirim
       const payload = new FormData();
-      payload.append("users_id", userId);
-      payload.append("packages_id", selectedPackage.id);
-      payload.append("event_name", `${formData.customerName} - ${selectedPackage.name}`);
-      payload.append("event_date", formData.eventDate);
-      payload.append("event_time", formData.eventTime);
-      payload.append("venue", formData.venue);
-      payload.append("guest_count", formData.guestCount);
-      payload.append("special_requests", formData.specialRequests || "");
-      payload.append("payment_method", selectedBankData.name);
-      payload.append("payment_proof", paymentProof);
-      payload.append("total", totalPrice);
+      payload.append("transactions_id", finalTransactionId);
+      payload.append("user_id", userId);
+      payload.append("payment_method", selectedBank);
+      payload.append("payment_date", new Date().toISOString().split("T")[0]);
       payload.append("status", "Waiting verification");
-  
-      await createTransactions(payload);
-      showNotification("✅ Transaksi berhasil dikirim ke sistem!", "success");
-  
-      setTimeout(() => {
-        navigate("/transaksi"); // arahkan ke halaman riwayat transaksi
-      }, 1500);
-    } catch (error) {
-      console.error("❌ Gagal simpan transaksi:", error);
-      showNotification(`❌ Gagal menyimpan transaksi: ${error.message}`, "error");
+      payload.append("image", paymentProof);
+
+      console.log("📤 Kirim bukti pembayaran dengan data:");
+      for (let [key, value] of payload.entries()) {
+        console.log(`${key}:`, value);
+      }
+
+      await createConfirmations(payload);
+
+      showNotification("✅ Bukti pembayaran berhasil dikirim!", "success");
+      setPaymentStep("done");
+    } catch (err) {
+      console.error("❌ Gagal upload bukti pembayaran:", err);
+      showNotification("Terjadi kesalahan saat upload.", "error");
     } finally {
       setIsSubmitting(false);
     }
   };  
-
+  
   const showNotification = (message, type) => {
-    console.log(`📢 Notification: ${message}`)
+    console.log(`📢 Notification: ${message}`);
 
-    const notification = document.createElement("div")
+    const notification = document.createElement("div");
     notification.style.cssText = `
       position: fixed;
       top: 20px;
@@ -140,81 +157,88 @@ export default function Transaction() {
       animation: slideIn 0.3s ease;
       max-width: 300px;
       word-wrap: break-word;
-    `
-    notification.textContent = message
+    `;
+    notification.textContent = message;
 
-    document.body.appendChild(notification)
+    document.body.appendChild(notification);
 
     setTimeout(() => {
-      notification.style.animation = "slideOut 0.3s ease"
+      notification.style.animation = "slideOut 0.3s ease";
       setTimeout(() => {
         if (document.body.contains(notification)) {
-          document.body.removeChild(notification)
+          document.body.removeChild(notification);
         }
-      }, 300)
-    }, 4000)
-  }
+      }, 300);
+    }, 4000);
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log("📋 Form submitted, moving to payment selection")
-    setPaymentStep("select")
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  const adminFee = 50000
-  const totalPrice = selectedPackage.price + adminFee
+    try {
+      // Ambil id terbaru
+      const response = await getTransactions();
+      const transactions = response?.data || [];
+      const maxId = transactions.reduce(
+        (max, trx) => (trx.id > max ? trx.id : max),
+        0
+      );
+      const nextId = maxId + 1;
+      localStorage.setItem("transaction_id", nextId);
+      console.log("💾 Transaction ID disimpan:", nextId);
+
+      const payload = new FormData();
+      payload.append("user_id", userId);
+      payload.append("packages_id", selectedPackage.id);
+      payload.append("event_name", formData.event_name);
+      payload.append("event_date", formData.eventDate);
+      payload.append("event_time", formData.eventTime);
+      payload.append("venue", formData.venue);
+      payload.append("guest_count", formData.guestCount);
+      payload.append("special_requests", formData.specialRequests || "");
+      payload.append("total", totalPrice);
+
+      await createTransactions(payload);
+
+      setPaymentStep("select");
+      alert("✅ Transaksi berhasil dikirim!");
+    } catch (err) {
+      console.error("❌ Gagal kirim transaksi:", err);
+      alert("Terjadi kesalahan saat mengirim transaksi.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
+  
+  const adminFee = 50000;
+  const totalPrice = selectedPackage.price;
 
   const bankOptions = [
     { id: "bni", name: "Bank BNI", shortName: "BNI", color: "#1e40af" },
     { id: "bri", name: "Bank BRI", shortName: "BRI", color: "#0ea5e9" },
-    { id: "mandiri", name: "Bank Mandiri", shortName: "MANDIRI", color: "#dc2626" },
+    {
+      id: "mandiri",
+      name: "Bank Mandiri",
+      shortName: "MANDIRI",
+      color: "#dc2626",
+    },
     { id: "jatim", name: "Bank Jatim", shortName: "JATIM", color: "#059669" },
-    { id: "bca", name: "Bank Central Asia", shortName: "BCA", color: "#2563eb" },
-  ]
-
-  // Tambahkan function untuk mapping gambar
-  const getPackageImage = (packageName) => {
-    const imageMap = {
-      // Wedding
-      "Paket Wedding Modern Glam": "/images/wedding_glam.jpg",
-      "Paket Wedding Rustic": "/images/wedding_rustic.jpg",
-      "Paket Wedding Classic": "/images/wedding_classic.jpg",
-      "Paket Wedding Outdoor Elegan": "/images/wedding_outdoor_elegan.jpg",
-
-      // Birthday
-      "Paket Ulang Tahun Aesthetic": "/images/birthday_aesthetic.jpeg",
-      "Paket Ulang Tahun Tema Kartun": "/images/birthday_cartoon.jpg",
-      "Paket Ulang Tahun Minimalis": "/images/birthday_minimalist.jpg",
-      "Paket Ulang Tahun Outdoor": "/images/birthday_outdoor.jpg",
-
-      // Corporate/Concert
-      "Paket Konser Musik Full Package": "/images/concert_full.jpg",
-      "Paket Event Outdoor": "/images/event_outdoor.jpg",
-      "Paket Pertunjukan Seni": "/images/arts_performance.jpg",
-      "Paket Hiburan Mini": "/images/mini_entertainment.jpg",
-
-      // Graduation
-      "Paket Graduation Garden Party": "/images/graduation_garden.jpeg",
-      "Paket Graduation Indoor": "/images/graduation_indoor.jpg",
-      "Paket Graduation Simple": "/images/graduation_simple.jpg",
-      "Paket Graduation Themed Party": "/images/graduation_themed.jpg",
-
-      // Engagement
-      "Paket Engagement Bohemian": "/images/engagement_boho.jpeg",
-      "Paket Engagement Classic": "/images/engagement_classic.jpeg",
-      "Paket Engagement Modern": "/images/engagement_modern.jpg",
-      "Paket Engagement Garden": "/images/engagement_garden.jpg",
-    }
-
-    return imageMap[packageName] || "/placeholder.svg?height=200&width=300"
-  }
+    {
+      id: "bca",
+      name: "Bank Central Asia",
+      shortName: "BCA",
+      color: "#2563eb",
+    },
+  ];
 
   const getStepIndicator = () => {
     const steps = [
       { key: "form", label: "Detail", active: paymentStep === "form" },
       { key: "select", label: "Pembayaran", active: paymentStep === "select" },
       { key: "upload", label: "Upload", active: paymentStep === "upload" },
-    ]
+    ];
 
     return (
       <div className="step-indicator">
@@ -222,24 +246,31 @@ export default function Transaction() {
           <div key={step.key} className="step-container">
             <div
               className={`step ${step.active ? "active" : ""} ${
-                steps.findIndex((s) => s.key === paymentStep) > index ? "completed" : ""
+                steps.findIndex((s) => s.key === paymentStep) > index
+                  ? "completed"
+                  : ""
               }`}
             >
-              {steps.findIndex((s) => s.key === paymentStep) > index ? "✓" : index + 1}
+              {steps.findIndex((s) => s.key === paymentStep) > index
+                ? "✓"
+                : index + 1}
             </div>
             <span className="step-label">{step.label}</span>
             {index < steps.length - 1 && <div className="step-line"></div>}
           </div>
         ))}
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="transaction-page">
       <div className="container">
         <div className="page-header">
-          <button className="back-button" onClick={() => navigate(`/kategori/${categoryId || 1}`)}>
+          <button
+            className="back-button"
+            onClick={() => navigate(`/kategori/${categoryId || 1}`)}
+          >
             ← Kembali
           </button>
           <h1>Konfirmasi Pemesanan</h1>
@@ -255,12 +286,13 @@ export default function Transaction() {
               </div>
               <div className="package-preview">
                 <img
-                  src={getPackageImage(selectedPackage.name) || "/placeholder.svg"}
-                  alt={selectedPackage.name}
+                  src={
+                    selectedPackage?.image
+                      ? `${packagesImage}/${selectedPackage.image}`
+                      : "/placeholder.jpg"
+                  }
+                  alt={selectedPackage?.name || "Paket"}
                   className="package-image"
-                  onError={(e) => {
-                    e.target.src = "/placeholder.svg?height=200&width=300"
-                  }}
                 />
                 <div className="package-details">
                   <h4>{selectedPackage.name}</h4>
@@ -318,14 +350,14 @@ export default function Transaction() {
                       />
                     </div>
                     <div className="form-group">
-                      <label>Nomor Telepon *</label>
+                      <label>Nama Event *</label>
                       <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
+                        type="text"
+                        name="event_name"
+                        value={formData.event_name}
                         onChange={handleInputChange}
                         required
-                        placeholder="08xxxxxxxxxx"
+                        placeholder="pesta"
                       />
                     </div>
                     <div className="form-group">
@@ -393,8 +425,12 @@ export default function Transaction() {
                     >
                       Batal
                     </button>
-                    <button type="submit" className="btn-primary">
-                      Lanjut ke Pembayaran →
+                    <button
+                      type="submit"
+                      className="btn-primary"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Menyimpan..." : "Lanjut ke Pembayaran →"}
                     </button>
                   </div>
                 </form>
@@ -411,10 +447,15 @@ export default function Transaction() {
                   {bankOptions.map((bank) => (
                     <div
                       key={bank.id}
-                      className={`bank-card ${selectedBank === bank.id ? "selected" : ""}`}
+                      className={`bank-card ${
+                        selectedBank === bank.id ? "selected" : ""
+                      }`}
                       onClick={() => handleBankSelection(bank.id)}
                     >
-                      <div className="bank-icon" style={{ backgroundColor: bank.color }}>
+                      <div
+                        className="bank-icon"
+                        style={{ backgroundColor: bank.color }}
+                      >
                         {bank.shortName.charAt(0)}
                       </div>
                       <div className="bank-info">
@@ -439,12 +480,20 @@ export default function Transaction() {
                   <div className="bank-header">
                     <div
                       className="bank-icon-large"
-                      style={{ backgroundColor: bankOptions.find((b) => b.id === selectedBank)?.color }}
+                      style={{
+                        backgroundColor: bankOptions.find(
+                          (b) => b.id === selectedBank
+                        )?.color,
+                      }}
                     >
-                      {bankOptions.find((b) => b.id === selectedBank)?.shortName.charAt(0)}
+                      {bankOptions
+                        .find((b) => b.id === selectedBank)
+                        ?.shortName.charAt(0)}
                     </div>
                     <div>
-                      <h4>{bankOptions.find((b) => b.id === selectedBank)?.name}</h4>
+                      <h4>
+                        {bankOptions.find((b) => b.id === selectedBank)?.name}
+                      </h4>
                       <p>Virtual Account</p>
                     </div>
                   </div>
@@ -452,11 +501,15 @@ export default function Transaction() {
                   <div className="payment-info">
                     <div className="info-row">
                       <span className="label">Nomor Virtual Account</span>
-                      <span className="value">8277 {Math.floor(10000000 + Math.random() * 90000000)}</span>
+                      <span className="value">
+                        8277 {Math.floor(10000000 + Math.random() * 90000000)}
+                      </span>
                     </div>
                     <div className="info-row">
                       <span className="label">Total Pembayaran</span>
-                      <span className="value amount">Rp {totalPrice.toLocaleString()}</span>
+                      <span className="value amount">
+                        Rp {totalPrice.toLocaleString()}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -475,18 +528,29 @@ export default function Transaction() {
                       <div className="upload-text">
                         {paymentProof ? (
                           <>
-                            <span className="file-name">✅ {paymentProof.name}</span>
-                            <span className="file-size">({(paymentProof.size / 1024 / 1024).toFixed(2)} MB)</span>
+                            <span className="file-name">
+                              ✅ {paymentProof.name}
+                            </span>
+                            <span className="file-size">
+                              ({(paymentProof.size / 1024 / 1024).toFixed(2)}{" "}
+                              MB)
+                            </span>
                           </>
                         ) : (
-                          <span className="upload-title">Klik untuk upload bukti pembayaran *</span>
+                          <span className="upload-title">
+                            Klik untuk upload bukti pembayaran *
+                          </span>
                         )}
                       </div>
                     </label>
                   </div>
 
                   <div className="action-buttons">
-                    <button type="button" className="btn-secondary" onClick={() => setPaymentStep("select")}>
+                    <button
+                      type="button"
+                      className="btn-secondary"
+                      onClick={() => setPaymentStep("select")}
+                    >
                       ← Kembali
                     </button>
                     <button
@@ -514,13 +578,25 @@ export default function Transaction() {
 
       <style jsx>{`
         @keyframes slideIn {
-          from { transform: translateX(100%); opacity: 0; }
-          to { transform: translateX(0); opacity: 1; }
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
         }
-        
+
         @keyframes slideOut {
-          from { transform: translateX(0); opacity: 1; }
-          to { transform: translateX(100%); opacity: 0; }
+          from {
+            transform: translateX(0);
+            opacity: 1;
+          }
+          to {
+            transform: translateX(100%);
+            opacity: 0;
+          }
         }
 
         .file-name {
@@ -535,5 +611,5 @@ export default function Transaction() {
         }
       `}</style>
     </div>
-  )
+  );
 }

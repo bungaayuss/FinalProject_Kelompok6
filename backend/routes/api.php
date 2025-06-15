@@ -29,30 +29,30 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api'
 
 //User
 Route::middleware('auth:api')->group(function () {
-    //1. update profile user (role customer)
+    // 1. Profile
     Route::apiResource('users', UserController::class)->only(['index', 'show', 'update']);
 
-    //2. confirmations
+    // 2. Konfirmasi
     Route::apiResource('confirmations', ConfirmationController::class)->only(['store']);
-    
-    //3. transaction
-    Route::apiResource('transactions', TransactionController::class)->only(['store']);
 
-    //Admin
-    Route::middleware(['role:admin'])->group(function () { 
-        //1. liat user
-        Route::apiResource('users', UserController::class)->except(['update']);
-    
-        //2. confirmationz
+    // 3. Transaksi
+    Route::apiResource('transactions', TransactionController::class)->only(['store','index','show']);
+
+    //Admin only
+    Route::middleware(['role:admin'])->group(function () {
+        // 1. Lihat user
+        Route::apiResource('users', UserController::class)->except(['index', 'show', 'update']);
+        
+        // 2. Konfirmasi
         Route::apiResource('confirmations', ConfirmationController::class)->except(['store']);
-    
-        //3. transacton
-        Route::apiResource('transactions', TransactionController::class)->except(['store']);
-    
-        //4. packages
+        
+        // 3. Transaksi (selain store, index, show -> biar nggak bentrok)
+        Route::apiResource('transactions', TransactionController::class)->except(['store','index','show']);
+        
+        // 4. Packages
         Route::apiResource('packages', PackageController::class)->except(['index', 'show']);
-    
-        //5. category
-        Route::apiResource('categories', CategoryController::class)->except(methods: ['index','show']);
+        
+        // 5. Kategori
+        Route::apiResource('categories', CategoryController::class)->except(['index','show']);
     });
 });

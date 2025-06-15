@@ -9,7 +9,7 @@ class Confirmation extends Model
     protected $table = 'confirmations';
 
     protected $fillable = [
-        'transactions_id', 'image', 'amount', 'payment_date', 'status', 'user_id', 'admin_name'
+        'transactions_id', 'image', 'payment_method', 'payment_date', 'status', 'user_id', 'admin_name'
     ];
     
 

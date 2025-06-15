@@ -17,10 +17,9 @@ return new class extends Migration
             $table->foreignId('packages_id')->constrained()->onDelete('cascade');
             $table->string('event_name');
             $table->date('event_date');
-            $table->time('event_time');
+            $table->string('event_time');
             $table->string('venue');
             $table->integer('guest_count');
-            $table->string('payment_method');
             $table->text('special_requests');
             $table->date('transaction_date');
             $table->decimal('total', 12, 2);

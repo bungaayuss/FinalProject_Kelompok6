@@ -16,8 +16,10 @@ export default function LaporanKonfirmasi() {
   const [, setAdmins] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editData, setEditData] = useState(null);
+  
 
   const columns = [
+    { title: "Konfirmasi ID", dataIndex: "id" },
     { title: "Transaksi ID", dataIndex: "transactions_id" },
     {
       title: "Bukti Pembayaran",
@@ -36,9 +38,8 @@ export default function LaporanKonfirmasi() {
     { title: "Tanggal Pembayaran", dataIndex: "payment_date" },
     { title: "Status", dataIndex: "status" },
     {
-      title: "Total",
-      dataIndex: "amount",
-      render: (amount) => `Rp ${parseInt(amount).toLocaleString()}`,
+      title: "Metode pembayaran",
+      dataIndex: "payment_method",
     },
     { title: "Nama Customer", dataIndex: "user_name" },
     {
@@ -56,6 +57,7 @@ export default function LaporanKonfirmasi() {
           getUsers(),
         ]);
         setConfirmations(confirmationsData);
+        console.log(confirmationsData);
         setCustomers(userData.filter((u) => u.role === "user"));
         setAdmins(userData.filter((u) => u.role === "admin"));
       } catch (error) {
@@ -66,6 +68,7 @@ export default function LaporanKonfirmasi() {
 
     fetchData();
   }, []);
+  
 
   const handleEditClick = (data) => {
     setEditData(data);
@@ -81,10 +84,10 @@ export default function LaporanKonfirmasi() {
       payload.append("status", dataFromForm.status);
       payload.append("_method", "PUT");
 
-      await updateConfirmations(editData.transactions_id, payload);
+      await updateConfirmations(editData.id, payload);
 
       const updatedList = confirmations.map((item) =>
-        item.transactions_id === editData.transactions_id
+        item.id === editData.id
           ? { ...item, status: dataFromForm.status, admin_name: adminName }
           : item
       );

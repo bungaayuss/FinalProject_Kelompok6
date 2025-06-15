@@ -9,7 +9,7 @@ class Transaction extends Model
     protected $table = 'transactions';
 
     protected $fillable = [
-        'user_id', 'packages_id', 'event_name', 'event_date', 'event_detail', 'transaction_date', 'total', 'status'
+        'user_id', 'packages_id', 'event_name', 'event_date', 'special_requests', 'transaction_date', 'total', 'status', 'event_time', 'guest_count', 'venue'
     ];
 
     public function package()
@@ -21,4 +21,10 @@ class Transaction extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function confirmation()
+    {
+        return $this->hasOne(Confirmation::class, 'transactions_id');
+    }
+
 }
