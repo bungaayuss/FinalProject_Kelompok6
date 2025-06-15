@@ -22,10 +22,8 @@ export default function Topbar() {
       </div>
 
       <div className="d-flex align-items-center gap-3">
-        <FaBell style={{ fontSize: "1.25rem", cursor: "pointer" }} />
-
         <Link
-          to="/register"
+          to="/admin/admin"
           className="btn me-2"
           style={{
             border: "2px solid #014AB0",
