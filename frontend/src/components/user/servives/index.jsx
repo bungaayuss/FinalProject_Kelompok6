@@ -3,6 +3,7 @@ import "../../../styles/services.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
 import { getCategories } from "../../../_services/categories";
+import Footer from "../footer";
 
 export default function Services() {
   const [categories, setCategories] = useState([]);
@@ -79,6 +80,7 @@ export default function Services() {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 }

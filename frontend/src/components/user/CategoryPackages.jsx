@@ -52,9 +52,18 @@ export default function CategoryPackage() {
       .filter((item) => item !== "");
   };
 
-  const handleSelectPackage = (pkg) => {
+ const handleSelectPackage = (pkg) => {
+  const user = JSON.parse(localStorage.getItem("userInfo")); 
+
+    if (!user || !user.id) {
+      navigate("/login");
+      return;
+    }
+
     navigate("/transaction", { state: { package: pkg } });
   };
+
+
   
   const categoryName = packages[0]?.category_name || "Unknown";
 
@@ -76,19 +85,16 @@ export default function CategoryPackage() {
             const originalPrice = getOriginalPrice(pkg.price);
             const discount = getDiscount(pkg.price, originalPrice);
             const features = getFeatures(pkg.description);
-            const packageImage = `${packagesImage}/${pkg.image}`;
-
+            const packageImage = pkg.image
+              ? `${packagesImage}/${pkg.image}`
+              : "/images/default_package.jpg";
+          
             return (
               <div key={pkg.id} className="package-card">
                 {/* Gambar */}
                 <div className="image-container">
-                  <img
-                    src={packageImage || "/placeholder.svg"}
-                    alt={pkg.name}
-                    onError={(e) => {
-                      e.target.src = "/images/default_package.jpg";
-                    }}
-                  />
+                  <img src={packageImage} alt={pkg.name} />
+
                   <div className="discount">HEMAT {discount}%</div>
                 </div>
 
