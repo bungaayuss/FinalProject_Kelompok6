@@ -41,7 +41,7 @@ class ConfirmationController extends Controller
         
         $validator = Validator::make($request->all(),[
             'image' => 'required|image|mimes:jpeg,jpg,png|max:2048',
-            'payment_method' => 'required|numeric',
+            'payment_method' => 'required|string',
             'payment_date' => 'required|date_format:Y-m-d',
         ]);
 

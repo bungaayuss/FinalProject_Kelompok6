@@ -6,27 +6,26 @@ import { getPackages } from "../../../_services/packages";
 export default function Transaksi() {
   const [filterStatus, setFilterStatus] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [transactions, setTransactions] = useState([])
+  const [transactions, setTransactions] = useState([]);
   const [packages, setPackages] = useState([]);
-
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const userId = userInfo?.id;
 
   useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const [transactionsData, packageData] = await Promise.all([
-            getTransactions(),
-            getPackages(),
-          ]);
-          setTransactions(transactionsData);
-          setPackages(packageData);
-        } catch (error) {
-          console.error("Gagal mengambil data:", error);
-          alert("Gagal mengambil data transactions dan user.");
-        }
-      };
+    const fetchData = async () => {
+      try {
+        const [transactionsData, packageData] = await Promise.all([
+          getTransactions(),
+          getPackages(),
+        ]);
+        setTransactions(transactionsData);
+        setPackages(packageData);
+      } catch (error) {
+        console.error("Gagal mengambil data:", error);
+        alert("Gagal mengambil data transactions dan user.");
+      }
+    };
 
     if (userId) fetchData();
   }, [userId]);
@@ -37,20 +36,22 @@ export default function Transaksi() {
   };
 
   const filteredTransaksi = useMemo(() => {
-    return transactions.filter((item) => {
-      const matchStatus = filterStatus === "" || item.status === filterStatus;
-      const searchLower = searchTerm.toLowerCase();
-      const matchSearch =
-        searchTerm === "" ||
-        item.event_name?.toLowerCase().includes(searchLower) ||
-        item.id.toString().toLowerCase().includes(searchLower) ||
-        item.packages_id?.toString().toLowerCase().includes(searchLower) ||
-        item.event_date?.toLowerCase().includes(searchLower) ||
-        item.total?.toString().toLowerCase().includes(searchLower);
+    return transactions
+      .filter((item) => item.user_id === userId)
+      .filter((item) => {
+        const matchStatus = filterStatus === "" || item.status === filterStatus;
+        const searchLower = searchTerm.toLowerCase();
+        const matchSearch =
+          searchTerm === "" ||
+          item.event_name?.toLowerCase().includes(searchLower) ||
+          item.id.toString().toLowerCase().includes(searchLower) ||
+          item.packages_id?.toString().toLowerCase().includes(searchLower) ||
+          item.event_date?.toLowerCase().includes(searchLower) ||
+          item.total?.toString().toLowerCase().includes(searchLower);
 
-      return matchStatus && matchSearch;
-    });
-  }, [transactions, filterStatus, searchTerm]);
+        return matchStatus && matchSearch;
+      });
+  }, [transactions, filterStatus, searchTerm, userId]);
 
   const handleStatusChange = (e) => setFilterStatus(e.target.value);
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
@@ -124,9 +125,7 @@ export default function Transaksi() {
 
               <div className="card-body">
                 <div className="package-info">
-                  <p className="package-name">
-                    {getPackage(item.packages_id)}
-                  </p>
+                  <p className="package-name">{getPackage(item.packages_id)}</p>
                   <p className="order-id">ID Pesanan: {item.id}</p>
                 </div>
 

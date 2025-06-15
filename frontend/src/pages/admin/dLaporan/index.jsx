@@ -19,6 +19,7 @@ export default function LaporanKonfirmasi() {
   
 
   const columns = [
+    { title: "Konfirmasi ID", dataIndex: "id" },
     { title: "Transaksi ID", dataIndex: "transactions_id" },
     {
       title: "Bukti Pembayaran",
@@ -83,10 +84,10 @@ export default function LaporanKonfirmasi() {
       payload.append("status", dataFromForm.status);
       payload.append("_method", "PUT");
 
-      await updateConfirmations(editData.transactions_id, payload);
+      await updateConfirmations(editData.id, payload);
 
       const updatedList = confirmations.map((item) =>
-        item.transactions_id === editData.transactions_id
+        item.id === editData.id
           ? { ...item, status: dataFromForm.status, admin_name: adminName }
           : item
       );

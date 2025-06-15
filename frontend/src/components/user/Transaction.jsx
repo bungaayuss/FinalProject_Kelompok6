@@ -1,19 +1,21 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import "../../styles/Transaction.css";
-import { createTransactions } from "../../_services/transaction";
+import { createTransactions, getTransactions,  } from "../../_services/transaction";
 import { packagesImage } from "../../_api";
+import { createConfirmations } from "../../_services/confirmation";
 
 export default function Transaction() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [, setTransactionId] = useState(null);
+  const [transactionId, setTransactionId] = useState(null);
 
   const selectedPackageFromState = location.state?.package;
 
   const [selectedPackage, setSelectedPackage] = useState(
     selectedPackageFromState || null
   );
+
   const [categoryId, setCategoryId] = useState(null);
   const [formData, setFormData] = useState({
     customerName: "",
@@ -32,7 +34,7 @@ export default function Transaction() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const userId = userInfo?.id;
-
+  
   useEffect(() => {
     if (selectedPackageFromState) {
       setSelectedPackage(selectedPackageFromState);
@@ -48,6 +50,36 @@ export default function Transaction() {
         email: userInfo.email || "",
       }));
     }
+  }, []);
+
+  useEffect(() => {
+    if (paymentStep === "upload") {
+      const savedId = localStorage.getItem("transaction_id");
+      if (savedId && !transactionId) {
+        setTransactionId(savedId);
+      }
+    }
+  }, [paymentStep]);
+  
+  useEffect(() => {
+    const fetchLatestTransactionId = async () => {
+      try {
+        const response = await getTransactions();
+        const transactions = response?.data || [];
+
+        const maxId = transactions.reduce((max, trx) => {
+          return trx.id > max ? trx.id : max;
+        }, 0);
+
+        const nextId = maxId + 1;
+        localStorage.setItem("transaction_id", nextId);
+        console.log("💾 Transaction ID disimpan:", nextId);
+      } catch (err) {
+        console.error("❌ Gagal ambil data transaksi:", err);
+      }
+    };
+
+    fetchLatestTransactionId();
   }, []);
 
   const handleInputChange = (e) => {
@@ -66,36 +98,47 @@ export default function Transaction() {
     }
   };
 
-  const handleConfirmPayment = async () => {
+  const handleConfirmPayment = async (e) => {
+    e.preventDefault();
     setIsSubmitting(true);
 
+    let finalTransactionId = transactionId;
+    if (!finalTransactionId) {
+      finalTransactionId = localStorage.getItem("transaction_id");
+    }
+
+    if (!finalTransactionId) {
+      alert("❌ ID transaksi belum tersedia. Coba lagi.");
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
-      if (!formData.customerName || !formData.email || !formData.phone) {
-        throw new Error("Data customer tidak lengkap");
+      const payload = new FormData();
+      payload.append("transactions_id", finalTransactionId);
+      payload.append("user_id", userId);
+      payload.append("payment_method", selectedBank);
+      payload.append("payment_date", new Date().toISOString().split("T")[0]);
+      payload.append("status", "Waiting verification");
+      payload.append("image", paymentProof);
+
+      console.log("📤 Kirim bukti pembayaran dengan data:");
+      for (let [key, value] of payload.entries()) {
+        console.log(`${key}:`, value);
       }
 
-      if (!paymentProof) {
-        throw new Error("Bukti pembayaran belum diupload");
-      }
+      await createConfirmations(payload);
 
-      if (!userId) {
-        throw new Error("User belum login");
-      }
-
-      setTimeout(() => {
-        navigate("/transaksi"); // arahkan ke halaman riwayat transaksi
-      }, 1500);
-    } catch (error) {
-      console.error("❌ Gagal simpan transaksi:", error);
-      showNotification(
-        `❌ Gagal menyimpan transaksi: ${error.message}`,
-        "error"
-      );
+      showNotification("✅ Bukti pembayaran berhasil dikirim!", "success");
+      setPaymentStep("done");
+    } catch (err) {
+      console.error("❌ Gagal upload bukti pembayaran:", err);
+      showNotification("Terjadi kesalahan saat upload.", "error");
     } finally {
       setIsSubmitting(false);
     }
-  };
-
+  };  
+  
   const showNotification = (message, type) => {
     console.log(`📢 Notification: ${message}`);
 
@@ -133,42 +176,42 @@ export default function Transaction() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const payload = new FormData();
-    payload.append("users_id", userId);
-    payload.append("packages_id", selectedPackage.id);
-    payload.append("event_name", formData.event_name);
-    payload.append("event_date", formData.eventDate);
-    payload.append("event_time", formData.eventTime);
-    payload.append("venue", formData.venue);
-    payload.append("guest_count", formData.guestCount);
-    payload.append("special_requests", formData.specialRequests || "");
-    payload.append("total", totalPrice);
-    console.log("📦 Payload yang akan dikirim:");
-    for (let pair of payload.entries()) {
-      console.log(`${pair[0]}: ${pair[1]}`);
-    }
-
     try {
-      const transactionData = await createTransactions(payload);
+      // Ambil id terbaru
+      const response = await getTransactions();
+      const transactions = response?.data || [];
+      const maxId = transactions.reduce(
+        (max, trx) => (trx.id > max ? trx.id : max),
+        0
+      );
+      const nextId = maxId + 1;
+      localStorage.setItem("transaction_id", nextId);
+      console.log("💾 Transaction ID disimpan:", nextId);
 
-      if (!transactionData || !transactionData.id) {
-        alert("Gagal menyimpan transaksi");
-        setIsSubmitting(false);
-        return;
-      }
+      const payload = new FormData();
+      payload.append("user_id", userId);
+      payload.append("packages_id", selectedPackage.id);
+      payload.append("event_name", formData.event_name);
+      payload.append("event_date", formData.eventDate);
+      payload.append("event_time", formData.eventTime);
+      payload.append("venue", formData.venue);
+      payload.append("guest_count", formData.guestCount);
+      payload.append("special_requests", formData.specialRequests || "");
+      payload.append("total", totalPrice);
 
-      showNotification("✅ Transaksi berhasil dikirim ke sistem!", "success");
+      await createTransactions(payload);
 
-      setTransactionId(transactionData.id);
       setPaymentStep("select");
-    } catch (error) {
+      alert("✅ Transaksi berhasil dikirim!");
+    } catch (err) {
+      console.error("❌ Gagal kirim transaksi:", err);
       alert("Terjadi kesalahan saat mengirim transaksi.");
-      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
   };
-
+  
+  
   const adminFee = 50000;
   const totalPrice = selectedPackage.price;
 
