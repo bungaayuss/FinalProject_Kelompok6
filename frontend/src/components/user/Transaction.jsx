@@ -1,28 +1,24 @@
-"use client";
-
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import "../../styles/Transaction.css";
 import { createTransactions } from "../../_services/transaction";
+import { packagesImage } from "../../_api";
 
 export default function Transaction() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [, setTransactionId] = useState(null);
 
-  // Ambil data dari localStorage, kalau tidak ada buat default
-  const [selectedPackage, setSelectedPackage] = useState({
-    name: "Paket Event",
-    description: "Paket event pilihan Anda",
-    price: 5000000,
-    image: "/images/default_package.jpg",
-  });
+  const selectedPackageFromState = location.state?.package;
 
-  // Tambahkan setelah state selectedPackage
+  const [selectedPackage, setSelectedPackage] = useState(
+    selectedPackageFromState || null
+  );
   const [categoryId, setCategoryId] = useState(null);
-
   const [formData, setFormData] = useState({
     customerName: "",
     email: "",
-    phone: "",
+    event_name: "",
     eventDate: "",
     eventTime: "",
     venue: "",
@@ -37,17 +33,20 @@ export default function Transaction() {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const userId = userInfo?.id;
 
-  // Coba ambil data dari localStorage saat component mount
   useEffect(() => {
-    const packageData = localStorage.getItem("selectedPackage");
-    if (packageData) {
-      try {
-        const parsed = JSON.parse(packageData);
-        setSelectedPackage(parsed);
-        setCategoryId(parsed.categories_id); // Tambahkan ini
-      } catch (error) {
-        console.log("Error parsing package data, using default");
-      }
+    if (selectedPackageFromState) {
+      setSelectedPackage(selectedPackageFromState);
+      setCategoryId(selectedPackageFromState.categories_id);
+    }
+  }, [selectedPackageFromState]);
+
+  useEffect(() => {
+    if (userInfo) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        customerName: userInfo.name || "",
+        email: userInfo.email || "",
+      }));
     }
   }, []);
 
@@ -71,16 +70,8 @@ export default function Transaction() {
     setIsSubmitting(true);
 
     try {
-      const adminFee = 50000;
-      const totalPrice = selectedPackage.price + adminFee;
-      const selectedBankData = bankOptions.find((b) => b.id === selectedBank);
-
       if (!formData.customerName || !formData.email || !formData.phone) {
         throw new Error("Data customer tidak lengkap");
-      }
-
-      if (!selectedBankData) {
-        throw new Error("Bank tidak dipilih");
       }
 
       if (!paymentProof) {
@@ -90,27 +81,6 @@ export default function Transaction() {
       if (!userId) {
         throw new Error("User belum login");
       }
-
-      // Persiapkan FormData untuk dikirim
-      const payload = new FormData();
-      payload.append("users_id", userId);
-      payload.append("packages_id", selectedPackage.id);
-      payload.append(
-        "event_name",
-        `${formData.customerName} - ${selectedPackage.name}`
-      );
-      payload.append("event_date", formData.eventDate);
-      payload.append("event_time", formData.eventTime);
-      payload.append("venue", formData.venue);
-      payload.append("guest_count", formData.guestCount);
-      payload.append("special_requests", formData.specialRequests || "");
-      payload.append("payment_method", selectedBankData.name);
-      payload.append("payment_proof", paymentProof);
-      payload.append("total", totalPrice);
-      payload.append("status", "Waiting verification");
-
-      await createTransactions(payload);
-      showNotification("✅ Transaksi berhasil dikirim ke sistem!", "success");
 
       setTimeout(() => {
         navigate("/transaksi"); // arahkan ke halaman riwayat transaksi
@@ -159,14 +129,48 @@ export default function Transaction() {
     }, 4000);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("📋 Form submitted, moving to payment selection");
-    setPaymentStep("select");
+    setIsSubmitting(true);
+
+    const payload = new FormData();
+    payload.append("users_id", userId);
+    payload.append("packages_id", selectedPackage.id);
+    payload.append("event_name", formData.event_name);
+    payload.append("event_date", formData.eventDate);
+    payload.append("event_time", formData.eventTime);
+    payload.append("venue", formData.venue);
+    payload.append("guest_count", formData.guestCount);
+    payload.append("special_requests", formData.specialRequests || "");
+    payload.append("total", totalPrice);
+    console.log("📦 Payload yang akan dikirim:");
+    for (let pair of payload.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
+    }
+
+    try {
+      const transactionData = await createTransactions(payload);
+
+      if (!transactionData || !transactionData.id) {
+        alert("Gagal menyimpan transaksi");
+        setIsSubmitting(false);
+        return;
+      }
+
+      showNotification("✅ Transaksi berhasil dikirim ke sistem!", "success");
+
+      setTransactionId(transactionData.id);
+      setPaymentStep("select");
+    } catch (error) {
+      alert("Terjadi kesalahan saat mengirim transaksi.");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const adminFee = 50000;
-  const totalPrice = selectedPackage.price + adminFee;
+  const totalPrice = selectedPackage.price;
 
   const bankOptions = [
     { id: "bni", name: "Bank BNI", shortName: "BNI", color: "#1e40af" },
@@ -185,43 +189,6 @@ export default function Transaction() {
       color: "#2563eb",
     },
   ];
-
-  // Tambahkan function untuk mapping gambar
-  const getPackageImage = (packageName) => {
-    const imageMap = {
-      // Wedding
-      "Paket Wedding Modern Glam": "/images/wedding_glam.jpg",
-      "Paket Wedding Rustic": "/images/wedding_rustic.jpg",
-      "Paket Wedding Classic": "/images/wedding_classic.jpg",
-      "Paket Wedding Outdoor Elegan": "/images/wedding_outdoor_elegan.jpg",
-
-      // Birthday
-      "Paket Ulang Tahun Aesthetic": "/images/birthday_aesthetic.jpeg",
-      "Paket Ulang Tahun Tema Kartun": "/images/birthday_cartoon.jpg",
-      "Paket Ulang Tahun Minimalis": "/images/birthday_minimalist.jpg",
-      "Paket Ulang Tahun Outdoor": "/images/birthday_outdoor.jpg",
-
-      // Corporate/Concert
-      "Paket Konser Musik Full Package": "/images/concert_full.jpg",
-      "Paket Event Outdoor": "/images/event_outdoor.jpg",
-      "Paket Pertunjukan Seni": "/images/arts_performance.jpg",
-      "Paket Hiburan Mini": "/images/mini_entertainment.jpg",
-
-      // Graduation
-      "Paket Graduation Garden Party": "/images/graduation_garden.jpeg",
-      "Paket Graduation Indoor": "/images/graduation_indoor.jpg",
-      "Paket Graduation Simple": "/images/graduation_simple.jpg",
-      "Paket Graduation Themed Party": "/images/graduation_themed.jpg",
-
-      // Engagement
-      "Paket Engagement Bohemian": "/images/engagement_boho.jpeg",
-      "Paket Engagement Classic": "/images/engagement_classic.jpeg",
-      "Paket Engagement Modern": "/images/engagement_modern.jpg",
-      "Paket Engagement Garden": "/images/engagement_garden.jpg",
-    };
-
-    return imageMap[packageName] || "/placeholder.svg?height=200&width=300";
-  };
 
   const getStepIndicator = () => {
     const steps = [
@@ -277,13 +244,12 @@ export default function Transaction() {
               <div className="package-preview">
                 <img
                   src={
-                    getPackageImage(selectedPackage.name) || "/placeholder.svg"
+                    selectedPackage?.image
+                      ? `${packagesImage}/${selectedPackage.image}`
+                      : "/placeholder.jpg"
                   }
-                  alt={selectedPackage.name}
+                  alt={selectedPackage?.name || "Paket"}
                   className="package-image"
-                  onError={(e) => {
-                    e.target.src = "/placeholder.svg?height=200&width=300";
-                  }}
                 />
                 <div className="package-details">
                   <h4>{selectedPackage.name}</h4>
@@ -341,14 +307,14 @@ export default function Transaction() {
                       />
                     </div>
                     <div className="form-group">
-                      <label>Nomor Telepon *</label>
+                      <label>Nama Event *</label>
                       <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
+                        type="text"
+                        name="event_name"
+                        value={formData.event_name}
                         onChange={handleInputChange}
                         required
-                        placeholder="08xxxxxxxxxx"
+                        placeholder="pesta"
                       />
                     </div>
                     <div className="form-group">
@@ -416,8 +382,12 @@ export default function Transaction() {
                     >
                       Batal
                     </button>
-                    <button type="submit" className="btn-primary">
-                      Lanjut ke Pembayaran →
+                    <button
+                      type="submit"
+                      className="btn-primary"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Menyimpan..." : "Lanjut ke Pembayaran →"}
                     </button>
                   </div>
                 </form>

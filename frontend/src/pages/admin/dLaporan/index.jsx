@@ -16,6 +16,7 @@ export default function LaporanKonfirmasi() {
   const [, setAdmins] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editData, setEditData] = useState(null);
+  
 
   const columns = [
     { title: "Transaksi ID", dataIndex: "transactions_id" },
@@ -36,9 +37,8 @@ export default function LaporanKonfirmasi() {
     { title: "Tanggal Pembayaran", dataIndex: "payment_date" },
     { title: "Status", dataIndex: "status" },
     {
-      title: "Total",
-      dataIndex: "amount",
-      render: (amount) => `Rp ${parseInt(amount).toLocaleString()}`,
+      title: "Metode pembayaran",
+      dataIndex: "payment_method",
     },
     { title: "Nama Customer", dataIndex: "user_name" },
     {
@@ -56,6 +56,7 @@ export default function LaporanKonfirmasi() {
           getUsers(),
         ]);
         setConfirmations(confirmationsData);
+        console.log(confirmationsData);
         setCustomers(userData.filter((u) => u.role === "user"));
         setAdmins(userData.filter((u) => u.role === "admin"));
       } catch (error) {
@@ -66,6 +67,7 @@ export default function LaporanKonfirmasi() {
 
     fetchData();
   }, []);
+  
 
   const handleEditClick = (data) => {
     setEditData(data);
