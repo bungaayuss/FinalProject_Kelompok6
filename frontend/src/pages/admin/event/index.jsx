@@ -12,6 +12,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import Sidebar from "../../../components/admin/sidebar";
 import { getTransactions } from "../../../_services/transaction";
 
+// Konfigurasi lokal kalender
 const locales = { id };
 const localizer = dateFnsLocalizer({
   format,
@@ -35,28 +36,33 @@ export default function EventCalendar() {
         const kalenderEvent = transactionsData
           .filter((item) => item.status === "Paid")
           .map((item) => {
-            const start = new Date(`${item.event_date}T${item.event_time}`);
+
+            const start = new Date(
+              `${item.event_date}T${item.event_time || "00:00"}`
+            );
             const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
 
-            return {
+            const eventObj = {
               title: item.event_name,
               start,
               end,
               guest: item.guest_count,
               location: item.venue,
             };
+
+            return eventObj;
           });
 
         setEvents(kalenderEvent);
       } catch (error) {
-        console.error("Gagal mengambil data:", error);
+        console.error("❌ Gagal mengambil data:", error);
         alert("Gagal mengambil data transactions.");
       }
     };
 
     fetchData();
   }, []);
-
+  
   const handleEventClick = (event) => {
     setSelectedEvent(event);
     const modal = new window.bootstrap.Modal(
@@ -117,7 +123,7 @@ export default function EventCalendar() {
                 </p>
                 <p>
                   <strong>Waktu:</strong>{" "}
-                  {format(selectedEvent.start, "EEEE, dd MMM yyyy HH:mm", {
+                  {format(selectedEvent.start, "EEEE, dd MMM yyyy", {
                     locale: id,
                   })}
                 </p>

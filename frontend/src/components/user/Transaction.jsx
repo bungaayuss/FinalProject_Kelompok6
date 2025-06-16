@@ -131,6 +131,7 @@ export default function Transaction() {
 
       showNotification("✅ Bukti pembayaran berhasil dikirim!", "success");
       setPaymentStep("done");
+      navigate("/")
     } catch (err) {
       console.error("❌ Gagal upload bukti pembayaran:", err);
       showNotification("Terjadi kesalahan saat upload.", "error");
@@ -211,9 +212,8 @@ export default function Transaction() {
     }
   };
   
-  
   const adminFee = 50000;
-  const totalPrice = selectedPackage.price;
+  const totalPrice = selectedPackage.price + adminFee;
 
   const bankOptions = [
     { id: "bni", name: "Bank BNI", shortName: "BNI", color: "#1e40af" },

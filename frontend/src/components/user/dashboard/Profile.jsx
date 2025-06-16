@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import "../../../styles/Profile.css";
 import { showUsers, updateUsers } from "../../../_services/user";

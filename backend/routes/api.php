@@ -46,8 +46,8 @@ Route::middleware('auth:api')->group(function () {
         // 2. Konfirmasi
         Route::apiResource('confirmations', ConfirmationController::class)->except(['store']);
         
-        // 3. Transaksi (selain store, index, show -> biar nggak bentrok)
-        Route::apiResource('transactions', TransactionController::class)->except(['store','index','show']);
+        // 3. Transaksi
+        Route::apiResource('transactions', TransactionController::class)->except(['store', 'index', 'show']);
         
         // 4. Packages
         Route::apiResource('packages', PackageController::class)->except(['index', 'show']);

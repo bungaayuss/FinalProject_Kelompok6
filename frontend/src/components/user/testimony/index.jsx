@@ -59,11 +59,13 @@ export default function Testimony() {
   return (
     <section className="container my-5">
       <h2 className="mb-3 fw-bold text-center text-primary-custom">
-        What Our Clients Say
+        Apa Kata Klien Kami
       </h2>
       <p className="text-center text-muted mb-4">
-        Real stories from real events — trusted by our happy clients.
+        Cerita nyata dari acara nyata — kepercayaan yang tumbuh dari kepuasan
+        klien kami.
       </p>
+
       <div className="row g-4">
         {testimonials.map((event, index) => {
           const carouselId = `carousel-${index}`;

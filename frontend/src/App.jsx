@@ -16,7 +16,6 @@ import Transaction from "./components/user/Transaction";
 
 // Dashboard user
 import DashboardLayout from "./components/user/dashboard/dashboardLayout";
-import Notifikasi from "./components/user/dashboard/Notifikasi";
 import Profile from "./components/user/dashboard/Profile";
 import Transaksi from "./components/user/dashboard/Transaksi";
 
@@ -243,7 +242,6 @@ function App() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route path="profile" element={<Profile />} />
           <Route path="transaksi" element={<Transaksi />} />
-          <Route path="notifikasi" element={<Notifikasi />} />
         </Route>
       </Routes>
     </BrowserRouter>

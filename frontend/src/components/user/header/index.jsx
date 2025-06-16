@@ -64,7 +64,7 @@ export default function Header() {
           {token && userInfo ? (
             <>
               <Link
-              to="/"
+              to="/dashboard"
               className="btn"
               style={{
                 backgroundColor: "#014AB0",

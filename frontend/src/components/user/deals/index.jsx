@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import "../../../styles/deals.css";
 import { getPackages } from "../../../_services/packages";
 import { packagesImage } from "../../../_api";
+import { useNavigate } from "react-router";
 
 export default function Deals() {
   const [packages, setPackages] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,10 +17,14 @@ export default function Deals() {
     fetchData();
   }, []);
 
+  const handleSelectPackage = (pkg) => {
+    navigate("/transaction", { state: { package: pkg } });
+  };
+
   return (
     <section className="container my-5 deals-section">
       <h2 className="text-center fw-bold text-primary-custom mb-4">
-        Our Event Packages
+        Paling Laris & Paling Dicari!
       </h2>
       <div className="row justify-content-center gx-4 gy-5">
         {packages.map((pkg, i) => (
@@ -50,7 +56,12 @@ export default function Deals() {
                 <div className="price">
                   Rp {pkg.price.toLocaleString("id-ID")}
                 </div>
-                <button className="select-btn">Booking Now</button>
+                <button
+                  className="select-btn mt-auto"
+                  onClick={() => handleSelectPackage(pkg)}
+                >
+                  Pesan Sekarang
+                </button>
               </div>
             </div>
           </div>

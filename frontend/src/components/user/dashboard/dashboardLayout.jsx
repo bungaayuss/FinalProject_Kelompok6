@@ -1,11 +1,8 @@
-"use client";
-
 import { Outlet, useLocation, useNavigate, Navigate } from "react-router-dom";
 import "../../../styles/Dashboard.css";
 
 // Komponen halaman
 import Profile from "./Profile";
-import Notifikasi from "./Notifikasi";
 import Transaksi from "./transaksi";
 
 // Icon SVG
@@ -67,6 +64,20 @@ const BellIcon = () => (
   </svg>
 );
 
+const HomeIcon = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+  >
+    <path d="M3 9l9-7 9 7" />
+    <path d="M9 22V12h6v10" />
+  </svg>
+);
+
 // Sidebar Component
 const Sidebar = () => {
   const location = useLocation();
@@ -75,7 +86,7 @@ const Sidebar = () => {
   const navigation = [
     { name: "Profil Saya", key: "profile", icon: UserIcon },
     { name: "Riwayat Transaksi", key: "transaksi", icon: FileTextIcon },
-    { name: "Notifikasi", key: "notifikasi", icon: BellIcon },
+    { name: "Kembali ke halaman utama", key: "", icon: HomeIcon },
   ];
 
   return (
@@ -87,13 +98,23 @@ const Sidebar = () => {
       <nav className="sidebar-nav">
         <ul>
           {navigation.map((item) => {
-            const isActive = location.pathname.includes(item.key);
+            const isActive =
+              item.key === ""
+                ? location.pathname === "/"
+                : location.pathname.includes(`/dashboard/${item.key}`);
+          
             const IconComponent = item.icon;
 
             return (
               <li key={item.key} className="nav-item">
                 <button
-                  onClick={() => navigate(`/dashboard/${item.key}`)}
+                  onClick={() => {
+                    if (item.key === "") {
+                      navigate("/");
+                    } else {
+                      navigate(`/dashboard/${item.key}`);
+                    }
+                  }}
                   className={`nav-link ${isActive ? "active" : ""}`}
                 >
                   <IconComponent />
