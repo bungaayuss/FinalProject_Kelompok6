@@ -1,10 +1,6 @@
 import { Outlet, useLocation, useNavigate, Navigate } from "react-router-dom";
 import "../../../styles/Dashboard.css";
 
-// Komponen halaman
-import Profile from "./Profile";
-import Transaksi from "./transaksi";
-
 // Icon SVG
 const CloudIcon = () => (
   <svg
@@ -102,7 +98,7 @@ const Sidebar = () => {
               item.key === ""
                 ? location.pathname === "/"
                 : location.pathname.includes(`/dashboard/${item.key}`);
-          
+
             const IconComponent = item.icon;
 
             return (
