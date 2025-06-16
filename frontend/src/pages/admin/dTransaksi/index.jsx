@@ -44,17 +44,17 @@ export default function DaftarTransaksi() {
   const handleDelete = async (id) => {
     const paket = transactions.find((k) => k.id === id);
     const confirmDelete = window.confirm(
-      `Yakin ingin hapus transactions "${paket?.name}"?`
+      `Yakin ingin menghapus "${paket?.event_name}"?`
     );
 
     if (confirmDelete) {
       try {
         await deleteTransactions(id);
         setTransactions((prev) => prev.filter((k) => k.id !== id));
-        alert("Berhasil menghapus transactions");
+        alert("Berhasil menghapus transaksi");
       } catch (error) {
-        console.error("Gagal hapus transactions:", error);
-        alert("Gagal hapus transactions, coba lagi.");
+        console.error("Gagal hapus transaksi:", error);
+        alert("Gagal hapus transaksi, coba lagi.");
       }
     }
   };

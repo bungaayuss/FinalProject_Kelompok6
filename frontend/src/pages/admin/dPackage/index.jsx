@@ -51,7 +51,6 @@ export default function DaftarPackageEvent() {
           getCategories(),
         ]);
 
-        console.log("📂 Categories:", categoriesData);
         setPackages(packagesData);
         setCategories(categoriesData);
       } catch (error) {

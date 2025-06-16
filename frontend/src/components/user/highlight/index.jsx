@@ -27,7 +27,7 @@ export default function Highlight() {
       style={{ maxWidth: "100%", paddingLeft: 20, paddingRight: 20 }}
     >
       <h2 className="text-center fw-bold text-primary-custom mb-4">
-        Discover Events You'll Love
+        Butuh Acara Apa? Kami Siap Wujudkan
       </h2>
       <div
         className="d-flex flex-wrap justify-content-center"
@@ -70,8 +70,8 @@ export default function Highlight() {
             >
               <i
                 className={`fa-solid ${
-                  icon.find((item) => item.name === cat.category_name)
-                    ?.icon || "fa-star"
+                  icon.find((item) => item.name === cat.category_name)?.icon ||
+                  "fa-star"
                 }`}
                 style={{ fontSize: "28px", color: getColor(index) }}
               ></i>

@@ -4,31 +4,32 @@ import "../../../styles/fact.css";
 export default function Fact() {
   const faqs = [
     {
-      question: "What services does Pora EO offer?",
+      question: "Layanan apa saja yang ditawarkan Event Pora?",
       answer:
-        "We provide complete services including weddings, concerts, seminars, birthdays, and corporate events. This includes decoration, sound system, catering, and documentation.",
+        "Event Pora menyediakan layanan lengkap untuk berbagai jenis acara seperti pernikahan, konser, seminar, ulang tahun, hingga acara perusahaan. Termasuk dekorasi, sistem suara, katering, dan dokumentasi.",
     },
     {
-      question: "Can I request a custom event theme?",
+      question: "Apakah saya bisa meminta tema acara khusus?",
       answer:
-        "Absolutely! Our creative team is ready to bring your ideas and dream event to life.",
+        "Tentu saja! Tim kreatif Event Pora siap mewujudkan ide dan konsep acara impian Anda.",
     },
     {
-      question: "How does the booking process work?",
+      question: "Bagaimana proses pemesanan di Event Pora?",
       answer:
-        "You can book through our website or consult directly via WhatsApp. Once confirmed, we’ll send you the invoice and production timeline.",
+        "Anda bisa memesan langsung melalui website kami atau konsultasi via WhatsApp. Setelah dikonfirmasi, kami akan mengirimkan invoice dan timeline produksi acara.",
     },
     {
-      question: "Can I cancel after booking?",
+      question: "Apakah saya bisa membatalkan setelah booking?",
       answer:
-        "Yes, but a cancellation fee will apply depending on the cancellation time based on our policy.",
+        "Bisa, namun akan dikenakan biaya pembatalan sesuai dengan waktu pembatalan berdasarkan kebijakan Event Pora.",
     },
     {
-      question: "Which areas does Pora EO cover?",
+      question: "Event Pora melayani area mana saja?",
       answer:
-        "We’re based in West Java but can organize events across Indonesia with transport and accommodation adjustments.",
+        "Kami berbasis di Jawa Barat, namun Event Pora siap mengorganisir acara di seluruh Indonesia dengan penyesuaian transportasi dan akomodasi.",
     },
   ];
+  
 
   const [activeIndex, setActiveIndex] = useState(null);
 
@@ -39,9 +40,9 @@ export default function Fact() {
   return (
     <section className="container my-5">
       <h2 className="text-center fw-bold text-primary-custom mb-4">
-        Everything You Need To Know
+        Mengapa Memilih Event Pora?
         <br />
-        About Pora EO
+        Ini Jawabannya!
       </h2>
 
       <div className="accordion-modern">
