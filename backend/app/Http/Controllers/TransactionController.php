@@ -9,8 +9,17 @@ use Illuminate\Support\Facades\Validator;
 
 class TransactionController extends Controller
 {
-    public function index(){
-        $transactions = Transaction::with(['user', 'package', 'confirmation'])->get();
+    public function index()
+    {
+        $user = auth()->user();
+
+        if ($user->role === 'admin') {
+            $transactions = Transaction::with(['user', 'package', 'confirmation'])->get();
+        } else {
+            $transactions = Transaction::with(['user', 'package', 'confirmation'])
+                ->where('user_id', $user->id)
+                ->get();
+        }
 
         $data = $transactions->map(function ($trx) {
             return [
@@ -39,6 +48,7 @@ class TransactionController extends Controller
             "data" => $data
         ], 200);
     }
+
     
     public function store(Request $request){
         $customerId = $request->user()->id;
