@@ -12,14 +12,7 @@ class TransactionController extends Controller
     public function index()
     {
         $user = auth()->user();
-
-        if ($user->role === 'admin') {
-            $transactions = Transaction::with(['user', 'package', 'confirmation'])->get();
-        } else {
-            $transactions = Transaction::with(['user', 'package', 'confirmation'])
-                ->where('user_id', $user->id)
-                ->get();
-        }
+        $transactions = Transaction::with(['user', 'package', 'confirmation'])->get();
 
         $data = $transactions->map(function ($trx) {
             return [
