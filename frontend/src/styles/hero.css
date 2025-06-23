@@ -9,12 +9,15 @@
   overflow: hidden;
   margin: 0;
   padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 /* Konten dalam hero */
 .hero-content {
-  padding-left: 0;
-  padding-right: 0;
+  padding: 0 20px;
 }
 
 /* Judul hero */
@@ -45,12 +48,42 @@
   border-right: none;
 }
 
-@media (max-width: 767.98px) {
-  .stats-col {
-    border-right: none !important;
-  }
-}
-
 .stats-col h2 {
   color: #014AB0 !important;
 }
+
+/* === RESPONSIVE STYLING === */
+@media (max-width: 767.98px) {
+  .hero-title {
+    font-size: 1.75rem;
+    padding: 24px 16px;
+  }
+
+  .hero-content {
+    padding: 0 10px;
+  }
+
+  .stats-col {
+    border-right: none !important;
+    margin-bottom: 1.5rem;
+  }
+
+  .stats-col h2 {
+    font-size: 1.5rem;
+  }
+
+  .stats-col p {
+    font-size: 0.9rem;
+  }
+
+  .hero-divider {
+    width: 120px;
+    border-top: 3px solid #fff;
+  }
+
+  .hero-container {
+    height: auto;
+    padding: 40px 0;
+  }
+}
+

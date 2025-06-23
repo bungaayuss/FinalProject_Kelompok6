@@ -14,22 +14,21 @@ export default function Hero() {
         id="home"
         className="hero-container d-flex align-items-center justify-content-center text-center"
       >
-        <div className="hero-content w-100 px-0">
-          <h1 className="hero-title fw-bold mb-4">
-            MAKE YOU’RE BEAUTIFUL MOMENT WITH <br /> EVENT PORA
-          </h1>
-          <hr className="hero-divider" />
+        <div className="container">
+          <div className="hero-content w-100 px-0">
+            <h1 className="hero-title fw-bold mb-4">
+              MAKE YOUR BEAUTIFUL MOMENT WITH <br /> EVENT PORA
+            </h1>
+            <hr className="hero-divider" />
+          </div>
         </div>
       </div>
 
-      <section className="bg-light py-5">
+      <section className="bg-light py-5 px-3 px-md-0">
         <div className="container text-center">
           <div className="row justify-content-center">
             {stats.map((stat, index) => (
-              <div
-                key={index}
-                className="col-6 col-md-4 mb-4 mb-md-0 stats-col"
-              >
+              <div key={index} className="col-6 col-md-4 mb-4 stats-col">
                 <h2 className="text-primary fw-bold">{stat.value}</h2>
                 <p className="text-muted">{stat.label}</p>
               </div>

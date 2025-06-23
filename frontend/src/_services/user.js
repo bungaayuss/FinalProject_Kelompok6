@@ -46,7 +46,7 @@ export const updateUsers = async (id, data) => {
     });
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log(error.data);
     throw error;
   }
 };

@@ -30,7 +30,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api'
 //User
 Route::middleware('auth:api')->group(function () {
     // 1. Profile
-    Route::apiResource('users', UserController::class)->only(['index', 'show', 'update']);
+    Route::apiResource('users', UserController::class);
 
     // 2. Konfirmasi
     Route::apiResource('confirmations', ConfirmationController::class)->only(['store']);
@@ -41,7 +41,7 @@ Route::middleware('auth:api')->group(function () {
     //Admin only
     Route::middleware(['role:admin'])->group(function () {
         // 1. Lihat user
-        Route::apiResource('users', UserController::class)->except(['index', 'show', 'update']);
+        // Route::apiResource('users', UserController::class)->except(['index', 'show', 'update']);
         
         // 2. Konfirmasi
         Route::apiResource('confirmations', ConfirmationController::class)->except(['store']);
